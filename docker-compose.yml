@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  web:
+#    restart: always  # production
+    build:
+      context: .
+#    expose:
+#      - "8000"
+#    links:
+#      - postgres:postgres
+#      - redis:redis
+    volumes:
+      - .:/track
+#    tmpfs:
+#      - /tmp
+    env_file: ./track/.env
+    environment:
+      DEBUG: 'true'
+#    command: /usr/local/bin/gunicorn track.wsgi:application -w 2 -b :8000
+    command: python manage.py runserver 0.0.0.0:8000
+#    command: gunicorn track.wsgi:application --bind 0.0.0.0:8000  # production
+    ports:
+    - 8000:8000
+    depends_on:
+      - postgres
+
+#  nginx:
+#    restart: always
+#    build: ./nginx/
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - web-static:/www/static
+#    links:
+#      - web:web
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+#      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=track
+      - POSTGRES_PASSWORD=track
+      - POSTGRES_DB=track_dev
+#    env_file:
+#      - ./track/.env
+
+#  redis:
+#    restart: always
+#    image: redis:latest
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - redisdata:/data
+
+#volumes:
+#  track:
+#  web-django:
+#  web-static:
+#  pgdata:
+#  redisdata:
