@@ -4,7 +4,7 @@ services:
   web:
 #    restart: always  # production
     build:
-      context: .
+      context: .:v1
 #    expose:
 #      - "8000"
 #    links:
