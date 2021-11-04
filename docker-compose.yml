@@ -4,7 +4,7 @@ services:
   web:
 #    restart: always  # production
     build:
-      context: .:v1
+      context: .
 #    expose:
 #      - "8000"
 #    links:
@@ -58,9 +58,9 @@ services:
 #    volumes:
 #      - redisdata:/data
 
-#volumes:
+volumes:
 #  track:
 #  web-django:
 #  web-static:
-#  pgdata:
+  pgdata:
 #  redisdata:
