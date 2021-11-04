@@ -3,7 +3,7 @@
 FROM python:3.7-alpine
 
 RUN python -m pip install --upgrade pip
-RUN pip install flake8
+#RUN pip install flake8
 #COPY . .
 #RUN flake8 --ignore=E501,F401 .
 
@@ -26,4 +26,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . /track/
 
-ENTRYPOINT ["/usr/src/track/entrypoint.sh"]
+#ENTRYPOINT ["/usr/src/track/entrypoint.sh"]
