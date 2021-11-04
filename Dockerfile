@@ -20,9 +20,9 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 #RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/track/wheels -r requirements.txt
 
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/track/entrypoint.sh
-RUN chmod +x /usr/src/track/entrypoint.sh
+#COPY ./entrypoint.sh .
+#RUN sed -i 's/\r$//g' /usr/src/track/entrypoint.sh
+#RUN chmod +x /usr/src/track/entrypoint.sh
 
 COPY . /track/
 
