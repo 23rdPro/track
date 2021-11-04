@@ -58,9 +58,9 @@ services:
 #    volumes:
 #      - redisdata:/data
 
-#volumes:
+volumes:
 #  track:
 #  web-django:
 #  web-static:
-#  pgdata:
+  pgdata:
 #  redisdata:
