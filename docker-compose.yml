@@ -37,7 +37,7 @@ services:
 
   postgres:
     restart: always
-    image: postgres:latest
+    image: postgres:9.6.10-alpine
     ports:
       - "5432:5432"
     volumes:
@@ -59,7 +59,7 @@ services:
 #      - redisdata:/data
 
 volumes:
-#  track:
+  track:
 #  web-django:
 #  web-static:
   pgdata:
