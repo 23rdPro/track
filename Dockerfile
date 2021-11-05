@@ -3,6 +3,8 @@
 FROM python:3.7-alpine as base
 
 FROM base as builder
+=======
+RUN python -m pip install --upgrade pip
 
 RUN mkdir /install
 WORKDIR /install
@@ -25,3 +27,6 @@ WORKDIR /track
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+RUN pip3 install -r requirements.txt
+
+COPY . /track/
