@@ -3,7 +3,7 @@
 FROM python:3.7-alpine as base
 
 FROM base as builder
-=======
+
 RUN python -m pip install --upgrade pip
 
 RUN mkdir /install
