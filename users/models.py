@@ -17,7 +17,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(_('Full name'), max_length=128, help_text='full name')
     is_staff = models.BooleanField(_('staff status'), default=False)
     is_superuser = models.BooleanField(_('superuser status'), default=False)
-    is_active = models.BooleanField(_('active status'), default=False)
+    is_active = models.BooleanField(_('active status'), default=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 

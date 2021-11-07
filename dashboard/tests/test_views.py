@@ -26,28 +26,26 @@ class TestDashboardView:
         assert AddDashboardFormView.template_name == 'dashboard/list.html'
         assert not AddDashboardFormView.pk
 
-    def test_view_with_client(self):
         path = resolve('/dashboard/')
         assert path.view_name == 'dashboard:list'
         assert path.url_name == 'list'
 
+    def test_view_with_client(self):
         client = Client()
-        user = UserFactory()
         response = client.get('/dashboard/')
+        assert response.url == '/accounts/login/?next=/dashboard/'
         assert response.status_code == 302
-        assert response.url == "/accounts/login/?next=/dashboard/"
-        # todo test template used
 
-        response = client.post('/accounts/login/', {
-            'email': user.email,
-            'password': user.password
-        })
+        user = UserFactory()
+        client.force_login(user)
+
+        response = client.get('/dashboard/')
         assert response.status_code == 200
+        # todo test template used
         assert isinstance(response.content, bytes)  # :(
-        assert response.context == 8
-        # assert response.context['dashboard_field_form']
-        # assert 'keyword' in response.context['dashboard_field_form'].fields
-        # assert 'aoc' in response.context['dashboard_field_form'].fields
+        assert response.context['dashboard_field_form']
+        assert 'keyword' in response.context['dashboard_field_form'].fields
+        assert 'aoc' in response.context['dashboard_field_form'].fields
 
     def test_view_with_rfactory(self):
-        pass
+        factory = RequestFactory()
