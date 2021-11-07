@@ -1,51 +1,53 @@
 import pytest
-from django.template.exceptions import TemplateDoesNotExist
 from django.urls import reverse, resolve
 from django.test import Client, RequestFactory
-
+import dashboard
 from dashboard import views
-from dashboard.factories import DashboardFactory
-from dashboard.forms import AddDashboardFieldForm
-from dashboard.views import DashboardListView
+from dashboard.forms import AddDashboardFieldForm, CreateDashboardPublicationForm
+from dashboard.models import Dashboard
+from dashboard.views import DashboardListView, AddDashboardFormView, DashboardView
 from users.factories import UserFactory
+from users.models import User
 
 
 @pytest.mark.django_db
-class TestDashboardListView:
+class TestDashboardView:
 
     def test_valid_attributes(self):
+        assert views.DashboardView
         assert views.DashboardListView
-        view = DashboardListView
-        assert view.paginate_by == 10
-        assert view.context_object_name == 'dashboards'
-        assert view.template_name == 'dashboard/list.html'
+        assert views.AddDashboardFormView
 
-    def test_view_with_rfactory(self):
-        factory = RequestFactory()
-        request = factory.get('/dashboard/')
-        assert resolve(request.path).view_name == 'dashboard:list'
+        assert DashboardListView.paginate_by == 10
+        assert DashboardListView.context_object_name == 'dashboards'
+        assert DashboardListView.template_name == 'dashboard/list.html'
+
+        assert AddDashboardFormView.form_class == AddDashboardFieldForm
+        assert AddDashboardFormView.template_name == 'dashboard/list.html'
+        assert not AddDashboardFormView.pk
 
     def test_view_with_client(self):
-        user = UserFactory()
+        path = resolve('/dashboard/')
+        assert path.view_name == 'dashboard:list'
+        assert path.url_name == 'list'
+
         client = Client()
+        user = UserFactory()
         response = client.get('/dashboard/')
         assert response.status_code == 302
         assert response.url == "/accounts/login/?next=/dashboard/"
-        response = client.post(response.url, {
-            'username': user.username,
+        # todo test template used
+
+        response = client.post('/accounts/login/', {
+            'email': user.email,
             'password': user.password
         })
         assert response.status_code == 200
-        # todo test template used
-        client.force_login(user)
-        response = client.get('/dashboard/')
-        # assert response.context['dashboard_field_form'] == AddDashboardFieldForm
-        # todo unbound form
-        assert response.status_code == 200
-        assert isinstance(response.content, bytes)
+        assert isinstance(response.content, bytes)  # :(
+        assert response.context == 8
+        # assert response.context['dashboard_field_form']
+        # assert 'keyword' in response.context['dashboard_field_form'].fields
+        # assert 'aoc' in response.context['dashboard_field_form'].fields
 
-
-
-
-class TestAddDashboardFormView:
-    pass
+    def test_view_with_rfactory(self):
+        pass

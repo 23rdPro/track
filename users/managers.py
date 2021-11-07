@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extras):
         extras.setdefault('is_superuser', False)
         extras.setdefault('is_staff', False)
-        extras.setdefault('is_active', False)
+        extras.setdefault('is_active', True)
 
         if extras.get('is_superuser') is not False:
             raise ValueError('This action is not permitted')

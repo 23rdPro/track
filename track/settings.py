@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'publication',
 ]
 
-AUTH_USER_MODEL = 'users.User'
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,6 +78,8 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
+AUTH_USER_MODEL = 'users.User'
+
 # allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
@@ -88,7 +88,7 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "[track] "
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[www.track.com] "
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 6
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 1800
