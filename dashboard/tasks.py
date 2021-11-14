@@ -1,12 +1,17 @@
+# flake8: noqa
+
 import json
+from itertools import chain
+from celery import shared_task
+from googleapiclient.discovery import build
 
 from dashboard.models import (
     Dashboard,
     Guide,
     StarterGuide,
     IntermediateGuide,
-    AdvancedGuide
-)
+    AdvancedGuide,
+    Field)
 from helpers.functions import get_text
 from track.settings import env
 
@@ -14,86 +19,116 @@ cx_key = env('CX_KEY')
 cse_key = env('CSE_KEY')
 
 
-# @shared_task  todo
-def track(dashboard: Dashboard):
+def execute_starters(link_set: set, service, guide: Guide, field_obj: Field, sta: list):
+    pass
+
+
+def execute_intermediates(link_set: set, service, guide: Guide, field_obj: Field, inta: list):
+    pass
+
+
+def execute_advance(link_set: set, service, guide: Guide, field_obj: Field, adv: list):
+    pass
+
+
+def get_names():
+    return execute_starters, execute_intermediates, execute_advance
+
+
+# todo: rewrite using thread or process, handle timeout gracefully
+@shared_task
+def track(pk: int):
+    dashboard = Dashboard.objects.get(pk=pk)
     link_set = set()
-    # service = build('customsearch', 'v1', developerKey=cse_key)
+    service = build('customsearch', 'v1', developerKey=cse_key)
     field_obj = dashboard.field.first()
     guide = Guide()
     guide.save()
-    sr, ie, ae = [texts for texts in get_text(field_obj.field, field_obj.aoc)]
 
-    starters = {}
-    # for i in range(4):
-    #     response = service.cse().list(q=sr[i], cx=cx_key
-    #                                   ).execute()
-    #     data = json.loads(json.dumps(response))
-    #     items = data['items']
-    #     for j in range(10):
-    #         if items[j]['link'] not in link_set:
-    #             starters[j] = starters.get(
-    #                 j,
-    #                 [items[j]['title'], items[j]['link'],
-    #                  items[j]['snippet']]
-    #             )
-    #             link_set.add(items[j]['link'])
+    # query terms
+    starter, intermediate, advance = [texts for texts in get_text(
+        field_obj.field, field_obj.aoc)]
 
-    # todo include order_by (time created perhaps)
-    #  filter to reduce size:time
-    before_starter = {obj for obj in StarterGuide.objects.all()}
-    StarterGuide.objects.bulk_create([StarterGuide(
-        title=starters[i][0], link=starters[i][1],
-        description=starters[i][2]) for i in range(len(starters))])
-    after_starter = {obj for obj in StarterGuide.objects.all()}
-    starter = [obj.save() for obj in after_starter-before_starter]
-    guide.starter.set(starter)
+    # starters
+    starters = [json.loads(json.dumps(service.cse().list(
+        q=starter[resp], cx=cx_key
+    ).execute()))['items'] for resp in range(4)]
 
-    intermediates = {}
-    # for i in range(4):
-    #     response = service.cse().list(q=ie[i], cx=cx_key
-    #                                   ).execute()
-    #     data = json.loads(json.dumps(response))
-    #     items = data['items']
-    #     for j in range(10):
-    #         if items[j]['link'] not in link_set:
-    #             intermediates[j] = intermediates.get(
-    #                 j,
-    #                 [items[j]['title'], items[j]['link'],
-    #                  items[j]['snippet']]
-    #             )
-    #             link_set.add(items[j]['link'])
+    starter_attrs = []
+    for items in chain(*starters):
+        if items['link'] not in link_set:
+            attr = (items['title'],
+                    items['link'],
+                    items['snippet'],
+                    )
+            starter_attrs.append(attr)
+            link_set.add(items['link'])
 
-    before_inter = {obj for obj in IntermediateGuide.objects.all()}
-    IntermediateGuide.objects.bulk_create([IntermediateGuide(
-        title=intermediates[i][0], link=intermediates[i][1],
-        description=intermediates[i][2])
-        for i in range(len(intermediates))])
-    after_inter = {obj for obj in IntermediateGuide.objects.all()}
-    intermediate = [obj.save() for obj in after_inter-before_inter]
-    guide.intermediate.set(intermediate)
+    starter_objects = StarterGuide.objects.bulk_create([StarterGuide(
+        title=item[0], link=item[1], description=item[2]) for item in
+        starter_attrs])
+    guide.starter.add(*[obj for obj in starter_objects])
 
-    advance = {}
-    # for i in range(4):
-    #     response = service.cse().list(q=ae[i], cx=cx_key
-    #                                   ).execute()
-    #     data = json.loads(json.dumps(response))
-    #     items = data['items']
-    #     for j in range(10):
-    #         if items[j]['link'] not in link_set:
-    #             advance[j] = advance.get(
-    #                 j,
-    #                 [items[j]['title'], items[j]['link'],
-    #                  items[j]['snippet']]
-    #             )
-    #             link_set.add(items[j]['link'])
+    # intermediates
+    intermediate = [json.loads(json.dumps(service.cse().list(
+        q=intermediate[resp], cx=cx_key
+    ).execute()))['items'] for resp in range(4)]
 
-    before_adv = {obj for obj in AdvancedGuide.objects.all()}
-    AdvancedGuide.objects.bulk_create([AdvancedGuide(
-        title=advance[i][0], link=advance[i][1],
-        description=advance[i][2]) for i in range(len(advance))])
-    after_adv = {obj for obj in AdvancedGuide.objects.all()}
-    advanced = [obj.save() for obj in after_adv-before_adv]
-    guide.advanced.set(advanced)
+    intermediate_attrs = []
+    for items in chain(*intermediate):
+        if items['link'] not in link_set:
+            attr = (items['title'],
+                    items['link'],
+                    items['snippet'],
+                    )
+            intermediate_attrs.append(attr)
+            link_set.add(items['link'])
 
+    intermediate_objects = IntermediateGuide.objects.bulk_create([
+        IntermediateGuide(title=item[0], link=item[1], description=item[2])
+        for item in intermediate_attrs])
+    guide.intermediate.add(*[obj for obj in intermediate_objects])
+
+    # advance
+    advance = [json.loads(json.dumps(service.cse().list(
+        q=advance[response], cx=cx_key
+    ).execute()))['items'] for response in range(4)]
+
+    advance_attrs = []
+    for items in chain(*advance):
+        if items['link'] not in link_set:
+            attr = (items['title'],
+                    items['link'],
+                    items['snippet'],
+                    )
+            advance_attrs.append(attr)
+            link_set.add(items['link'])
+
+    advance_objects = AdvancedGuide.objects.bulk_create([AdvancedGuide(
+        title=item[0], link=item[1], description=item[2]
+    ) for item in advance_attrs])
+    guide.advanced.add(*[obj for obj in advance_objects])
+
+    # to field by foreign key
     field_obj.guide = guide
     field_obj.save()
+
+    # q = queue.Queue(maxsize=3)
+    # q.put([Process(
+    #     target=get_names()[i], args=(link_set, service, guide),
+    #     kwargs={'sta': sta, 'inta': inta, 'adv': adv}) for i in range(3)
+    # ])
+    # while not q.empty():
+    #     proc = q.get()
+    #     if proc is None:
+    #         break
+    #     _start = proc.start()
+    #     _join = proc.join()
+    #  todo
+    # procs = [Process(
+    #     target=get_names()[i], args=(link_set, service, guide, field_obj),
+    #     kwargs={'sta': sta, 'inta': inta, 'adv': adv}) for i in range(3)
+    # ]
+    # _start = [proc.start() for proc in procs]
+    # # _terminate = [proc.terminate() for proc in procs]
+    # _join = [proc.join() for proc in procs]

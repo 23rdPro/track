@@ -137,3 +137,6 @@ env
 __pycache__
 
 track.iml
+
+**/migrations/**
+

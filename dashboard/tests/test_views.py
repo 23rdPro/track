@@ -1,13 +1,13 @@
+# flake8: noqa
+
 import pytest
-from django.urls import reverse, resolve
+from django.urls import resolve
 from django.test import Client, RequestFactory
-import dashboard
 from dashboard import views
-from dashboard.forms import AddDashboardFieldForm, CreateDashboardPublicationForm
+from dashboard.forms import AddDashboardFieldForm
 from dashboard.models import Dashboard
-from dashboard.views import DashboardListView, AddDashboardFormView, DashboardView
+from dashboard.views import DashboardListView, AddDashboardFormView
 from users.factories import UserFactory
-from users.models import User
 
 
 @pytest.mark.django_db
@@ -47,5 +47,21 @@ class TestDashboardView:
         assert 'keyword' in response.context['dashboard_field_form'].fields
         assert 'aoc' in response.context['dashboard_field_form'].fields
 
+        response = client.post('/dashboard/', {
+            'keyword': 'bone medicine',
+            'aoc': 'surgery'
+        })
+        assert response.status_code == 302
+        assert Dashboard.objects.count() == 1
+        queryset = Dashboard.objects.filter(publication__author=user)
+        obj = queryset.get()
+        assert obj.publication.first().author == user
+        assert obj.field.first().field == 'bone medicine'
+        assert obj.field.first().aoc == 'surgery'
+
     def test_view_with_rfactory(self):
-        factory = RequestFactory()
+        pass
+
+
+if __name__ == '__main__':
+    pytest.main()

@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -20,8 +22,9 @@ class Publication(models.Model):
     def get_absolute_url(self):
         return reverse('publication:detail', kwargs={'pk': self.pk})
 
-    # def delete(self, using=None, keep_parents=False):  over network instead raise method not allowed todo
+    # def delete(self, using=None, keep_parents=False):
+    # over network instead raise method not allowed todo
     #     pass
 
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['-updated']

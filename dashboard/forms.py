@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from django import forms
 
 from dashboard.models import Dashboard

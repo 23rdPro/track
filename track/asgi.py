@@ -1,3 +1,5 @@
+# flake8: noqa
+
 """
 ASGI config for track project.
 

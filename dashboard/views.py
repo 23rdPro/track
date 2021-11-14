@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -7,6 +9,7 @@ from django.views.generic import (
     DetailView,
 )
 from django.views.generic.edit import FormMixin
+
 from dashboard.forms import (
     AddDashboardFieldForm,
     CreateDashboardPublicationForm

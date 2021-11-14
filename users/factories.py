@@ -1,5 +1,6 @@
+# flake8: noqa
+
 import factory
-from factory import faker
 
 from users.models import User
 

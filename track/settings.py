@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import environ
 import os
 from pathlib import Path
@@ -31,10 +33,14 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
+    'crispy_forms',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'django_celery_results',
 
     'users',
     'dashboard',
@@ -188,3 +194,23 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CELERY
+CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Lagos'
+# CELERY_ALWAYS_EAGER = False
+# CELERY_TASK_ACKS_LATE = True
+# CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+# CELERY_CACHE_BACKEND = 'default'
+# CELERY_TASK_TRACK_STARTED = True
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', False)
+
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', False)

@@ -1,3 +1,5 @@
+# flake8: noqa
+
 """
 WSGI config for track project.
 

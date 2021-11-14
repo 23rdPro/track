@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import factory
 
 from dashboard import signals

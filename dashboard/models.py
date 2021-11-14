@@ -1,6 +1,10 @@
+# flake8: noqa
+
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from dashboard.managers import DashboardObjectManager
 
 
 class Dashboard(models.Model):
@@ -8,21 +12,20 @@ class Dashboard(models.Model):
     :param: field
     :param: publication
 
-    collection of submitted keys/words to track- users' dashboard is
+    collection of submitted keys/words to track- user's dashboard is
     distinguished with both attributes for uniqueness. each object has
     ratio one field : one publication && one field : multiple publications
     only
     """
     field = models.ManyToManyField('Field', related_name='dashboard_field')
-    publication = models.ManyToManyField('publication.'
-                                         'Publication',
+    publication = models.ManyToManyField('publication.Publication',
                                          related_name='dashboard_publication')
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True, editable=False)
-    objects = models.Manager()
+    objects = DashboardObjectManager()
 
     class Meta:
-        ordering = ['created']
+        ordering = ['updated']
 
     def get_absolute_url(self):
         return reverse('dashboard:detail', kwargs={'pk': self.pk})
@@ -37,8 +40,9 @@ class Field(models.Model):
     # and Dashboard.objects.get(user=user)- the latter may
     # encounter Dashboard.MultipleObjectsReturned
     # todo if one user submits same field, it raises MultipleObjectsReturned-
-    #  instead of get specific get all as sub list, put it in try block to
+    #  instead of get specific, get all as sub list, put it in try block to
     #  avoid exception
+
     # TODO this way you can get how many users searched a key: analytics
     field = models.CharField(max_length=255, help_text='Train \
     as a/an (Programmer/Accountant/etc)')
@@ -79,6 +83,14 @@ class StarterGuide(models.Model):
     link = models.URLField()
     objects = models.Manager()
 
+    # to bulk_create and save
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        instance = super(StarterGuide, self).save(
+            force_insert, force_update, using, update_fields
+        )
+        return instance
+
 
 class IntermediateGuide(models.Model):
     title = models.CharField(max_length=500, null=True, blank=True)
@@ -86,9 +98,23 @@ class IntermediateGuide(models.Model):
     link = models.URLField()
     objects = models.Manager()
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        instance = super(IntermediateGuide, self).save(
+            force_insert, force_update, using, update_fields
+        )
+        return instance
+
 
 class AdvancedGuide(models.Model):
     title = models.CharField(max_length=500, null=True, blank=True)
     description = models.CharField(max_length=1000, null=True, blank=True)
     link = models.URLField()
     objects = models.Manager()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        instance = super(AdvancedGuide, self).save(
+            force_insert, force_update, using, update_fields
+        )
+        return instance

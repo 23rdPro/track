@@ -1,9 +1,11 @@
+# flake8: noqa
+
 from django.db import transaction
 from django.db.models.signals import m2m_changed, pre_delete
 from django.dispatch import receiver
 
+from dashboard import tasks
 from dashboard.models import Dashboard
-from dashboard.tasks import track
 from helpers.functions import delete_file
 
 
@@ -11,15 +13,11 @@ from helpers.functions import delete_file
 def track_dashboard(sender, instance, action, **kwargs):
     if action is 'post_add':
         transaction.on_commit(
-            lambda: track.delay(instance))
+            lambda: tasks.track.delay(instance.pk))
 
 
 @receiver(pre_delete, sender=Dashboard)
 def delete_related_attributes(sender, instance, *args, **kwargs):
-    # Note: get first publication instance related to dashboard-
-    # when creating publications, ensure each publication is
-    # valid based on all attributes to be sure no unwanted pdf
-    # is left unbound
     field = instance.field.first()
     guide = field.guide
     for starter in guide.starter.all():
