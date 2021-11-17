@@ -1,5 +1,4 @@
 # flake8: noqa
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -14,7 +13,7 @@ from dashboard.forms import (
     AddDashboardFieldForm,
     CreateDashboardPublicationForm
 )
-from dashboard.models import Dashboard, Field
+from dashboard.models import Dashboard, Field, Guide
 from publication.models import Publication
 
 
@@ -49,9 +48,11 @@ class AddDashboardFormView(LoginRequiredMixin, FormView):
         publication.author = user
         publication.save()
 
+        guide = Guide().save()
         key = form.cleaned_data['keyword']
         qualify_key = form.cleaned_data['aoc']
         field = Field(field=key, aoc=qualify_key)
+        field.guide = guide
         field.save()
 
         dashboard = Dashboard()

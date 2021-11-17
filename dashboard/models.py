@@ -71,9 +71,12 @@ class Guide(models.Model):
     aoc: python devops engineer. The eventual links will be collected as
     many2many and attributed to starter... and so on
     """
-    starter = models.ManyToManyField('StarterGuide', related_name='guide_starter')
-    intermediate = models.ManyToManyField('IntermediateGuide', related_name='guide_inter')
-    advanced = models.ManyToManyField('AdvancedGuide', related_name='guide_adv')
+    starter = models.ManyToManyField('StarterGuide', related_name='guide_starter',
+                                     blank=True)
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='guide_inter',
+                                          blank=True)
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='guide_adv',
+                                      blank=True)
     objects = models.Manager()
 
 

@@ -7,11 +7,10 @@ from googleapiclient.discovery import build
 
 from dashboard.models import (
     Dashboard,
-    Guide,
     StarterGuide,
     IntermediateGuide,
     AdvancedGuide,
-    Field)
+    Guide)
 from helpers.functions import get_text
 from track.settings import env
 
@@ -19,116 +18,77 @@ cx_key = env('CX_KEY')
 cse_key = env('CSE_KEY')
 
 
-def execute_starters(link_set: set, service, guide: Guide, field_obj: Field, sta: list):
-    pass
-
-
-def execute_intermediates(link_set: set, service, guide: Guide, field_obj: Field, inta: list):
-    pass
-
-
-def execute_advance(link_set: set, service, guide: Guide, field_obj: Field, adv: list):
-    pass
-
-
-def get_names():
-    return execute_starters, execute_intermediates, execute_advance
-
-
-# todo: rewrite using thread or process, handle timeout gracefully
 @shared_task
-def track(pk: int):
+def starter(pk: int, link_set: dict) -> None:
     dashboard = Dashboard.objects.get(pk=pk)
-    link_set = set()
     service = build('customsearch', 'v1', developerKey=cse_key)
-    field_obj = dashboard.field.first()
-    guide = Guide()
-    guide.save()
-
-    # query terms
-    starter, intermediate, advance = [texts for texts in get_text(
-        field_obj.field, field_obj.aoc)]
-
-    # starters
+    field = dashboard.field.first()
+    stats, _, _ = [texts for texts in get_text(field.field, field.aoc)]
     starters = [json.loads(json.dumps(service.cse().list(
-        q=starter[resp], cx=cx_key
-    ).execute()))['items'] for resp in range(4)]
+        q=stats[resp], cx=cx_key
+    ).execute()))['items'] for resp in range(len(stats))]  # 4 times
 
-    starter_attrs = []
+    attributes = []
     for items in chain(*starters):
         if items['link'] not in link_set:
-            attr = (items['title'],
-                    items['link'],
-                    items['snippet'],
-                    )
-            starter_attrs.append(attr)
-            link_set.add(items['link'])
-
+            attributes.append((items['title'], items['link'], items['snippet']))
+            link_set[items['link']] = items['link']
     starter_objects = StarterGuide.objects.bulk_create([StarterGuide(
-        title=item[0], link=item[1], description=item[2]) for item in
-        starter_attrs])
+        title=item[0], link=item[1], description=item[2]
+    ) for item in attributes])
+    field = Dashboard.objects.get(pk=pk).field.first()
+    guide = Guide.objects.get(pk=field.guide.pk)  # todo pdb here
     guide.starter.add(*[obj for obj in starter_objects])
+    field.save()
 
-    # intermediates
-    intermediate = [json.loads(json.dumps(service.cse().list(
-        q=intermediate[resp], cx=cx_key
-    ).execute()))['items'] for resp in range(4)]
 
-    intermediate_attrs = []
-    for items in chain(*intermediate):
+@shared_task
+def intermediate(pk: int, link_set: dict) -> None:
+    dashboard = Dashboard.objects.get(pk=pk)
+    service = build('customsearch', 'v1', developerKey=cse_key)
+    field = dashboard.field.first()
+    _, ints, _ = [texts for texts in get_text(field.field, field.aoc)]
+    intermediates = [json.loads(json.dumps(service.cse().list(
+        q=ints[resp], cx=cx_key
+    ).execute()))['items'] for resp in range(len(ints))]
+
+    attributes = []
+    for items in chain(*intermediates):
         if items['link'] not in link_set:
-            attr = (items['title'],
-                    items['link'],
-                    items['snippet'],
-                    )
-            intermediate_attrs.append(attr)
-            link_set.add(items['link'])
-
-    intermediate_objects = IntermediateGuide.objects.bulk_create([
-        IntermediateGuide(title=item[0], link=item[1], description=item[2])
-        for item in intermediate_attrs])
+            attributes.append((items['title'], items['link'], items['snippet']))
+            link_set[items['link']] = items['link']
+    intermediate_objects = IntermediateGuide.objects.bulk_create([IntermediateGuide(
+        title=item[0], link=item[1], description=item[2]
+    ) for item in attributes])
+    field = Dashboard.objects.get(pk=pk).field.first()
+    guide = Guide.objects.get(pk=field.guide.pk)
     guide.intermediate.add(*[obj for obj in intermediate_objects])
+    field.save()
 
-    # advance
-    advance = [json.loads(json.dumps(service.cse().list(
-        q=advance[response], cx=cx_key
-    ).execute()))['items'] for response in range(4)]
 
-    advance_attrs = []
-    for items in chain(*advance):
+@shared_task
+def advance(pk: int, link_set: dict) -> None:
+    dashboard = Dashboard.objects.get(pk=pk)
+    service = build('customsearch', 'v1', developerKey=cse_key)
+    field = dashboard.field.first()
+    _, _, advs = [texts for texts in get_text(field.field, field.aoc)]
+    advanced = [json.loads(json.dumps(service.cse().list(
+        q=advs[resp], cx=cx_key
+    ).execute()))['items'] for resp in range(len(advs))]
+
+    attributes = []
+    for items in chain(*advanced):
         if items['link'] not in link_set:
-            attr = (items['title'],
-                    items['link'],
-                    items['snippet'],
-                    )
-            advance_attrs.append(attr)
-            link_set.add(items['link'])
-
+            attributes.append((items['title'], items['link'], items['snippet']))
+            link_set[items['link']] = items['link']
     advance_objects = AdvancedGuide.objects.bulk_create([AdvancedGuide(
         title=item[0], link=item[1], description=item[2]
-    ) for item in advance_attrs])
+    ) for item in attributes])
+    field = Dashboard.objects.get(pk=pk).field.first()
+    pk = field.guide.pk
+    guide = Guide.objects.get(pk=pk)
     guide.advanced.add(*[obj for obj in advance_objects])
+    field.save()
 
-    # to field by foreign key
-    field_obj.guide = guide
-    field_obj.save()
 
-    # q = queue.Queue(maxsize=3)
-    # q.put([Process(
-    #     target=get_names()[i], args=(link_set, service, guide),
-    #     kwargs={'sta': sta, 'inta': inta, 'adv': adv}) for i in range(3)
-    # ])
-    # while not q.empty():
-    #     proc = q.get()
-    #     if proc is None:
-    #         break
-    #     _start = proc.start()
-    #     _join = proc.join()
-    #  todo
-    # procs = [Process(
-    #     target=get_names()[i], args=(link_set, service, guide, field_obj),
-    #     kwargs={'sta': sta, 'inta': inta, 'adv': adv}) for i in range(3)
-    # ]
-    # _start = [proc.start() for proc in procs]
-    # # _terminate = [proc.terminate() for proc in procs]
-    # _join = [proc.join() for proc in procs]
+parallels = [starter, intermediate, advance]

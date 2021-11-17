@@ -1,11 +1,9 @@
-# flake8: noqa
-
 import os
-import threading
 
 
 def get_text(field: str, aoc: str):
-    qualifiers = ['beginner ', '', 'advanced ']  # todo, more qualifiers
+    qualifiers = ['beginner ', '', 'advanced ']
+    # todo, more qualifiers
     text = field+' '+aoc
     for q in qualifiers:
         term = q+text

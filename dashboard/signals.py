@@ -1,5 +1,4 @@
-# flake8: noqa
-
+from celery import group
 from django.db import transaction
 from django.db.models.signals import m2m_changed, pre_delete
 from django.dispatch import receiver
@@ -12,8 +11,12 @@ from helpers.functions import delete_file
 @receiver(m2m_changed, sender=Dashboard.field.through)
 def track_dashboard(sender, instance, action, **kwargs):
     if action is 'post_add':
+        # todo how to ensure each job in group completes successfully,
+        #  gracefully handle timeout- set retries: 3 in service build
+        link_set = {}
         transaction.on_commit(
-            lambda: tasks.track.delay(instance.pk))
+            lambda: group(parallel.apply_async(instance.pk, link_set)
+                          for parallel in tasks.parallels)())
 
 
 @receiver(pre_delete, sender=Dashboard)
