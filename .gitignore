@@ -143,3 +143,5 @@ track.iml
 static/
 
 celerybeat-schedule
+
+output

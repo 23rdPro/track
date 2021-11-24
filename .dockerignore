@@ -38,3 +38,5 @@ coverage.xml
 .gitignore
 
 celerybeat-schedule
+
+output
