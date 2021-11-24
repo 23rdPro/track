@@ -10,12 +10,12 @@ from helpers.functions import delete_file
 
 @receiver(m2m_changed, sender=Dashboard.field.through)
 def track_dashboard(sender, instance, action, **kwargs):
-    if action is 'post_add':
+    if action == 'post_add':
         # todo how to ensure each job in group completes successfully,
         #  gracefully handle timeout- set retries: 3 in service build
         link_set = {}
         transaction.on_commit(
-            lambda: group(parallel.apply_async(instance.pk, link_set)
+            lambda: group(parallel.delay(instance.pk, link_set)
                           for parallel in tasks.parallels)())
 
 

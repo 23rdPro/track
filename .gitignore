@@ -141,3 +141,5 @@ track.iml
 **/migrations/**
 
 static/
+
+celerybeat-schedule

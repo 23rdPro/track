@@ -1,0 +1,40 @@
+__pycache__/
+*.py[cod]
+
+# Django stuff
+db.sqlite3
+
+# Editor files
+.vscode/
+.idea/
+
+**/*.env
+.env
+**/.env
+**/.aws
+**/.ssh
+**/.git
+Dockerfile
+README.md
+docker-compose.yml
+**/.DS_Store
+**/venv
+**/env
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+.gitignore
+
+celerybeat-schedule

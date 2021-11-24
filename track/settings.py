@@ -16,12 +16,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = os.environ.get('DEBUG', None)
 
-ALLOWED_HOSTS = ['testserver', '127.0.0.1']
+ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -130,12 +130,12 @@ WSGI_APPLICATION = 'track.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+        "ENGINE": os.environ.get("SQL_ENGINE", None),
+        "NAME": os.environ.get("SQL_DATABASE", None),
+        "USER": os.environ.get("SQL_USER", None),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", None),
+        "HOST": os.environ.get("SQL_HOST", None),
+        "PORT": os.environ.get("SQL_PORT", None),
         "TEST": {
             "NAME": 'test-track'
         }
@@ -197,17 +197,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CELERY
 CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-# CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_BROKER_URL = 'amqp://localhost'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
-# CELERY_ALWAYS_EAGER = False
+# CELERY_ALWAYS_EAGER = True
 # CELERY_TASK_ACKS_LATE = True
-# CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_WORKER_PREFETCH_MULTIPLIER = 64
 # CELERY_CACHE_BACKEND = 'default'
-# CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_RESULT_EXPIRES
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

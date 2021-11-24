@@ -20,9 +20,9 @@ cse_key = env('CSE_KEY')
 
 @shared_task
 def starter(pk: int, link_set: dict) -> None:
-    dashboard = Dashboard.objects.get(pk=pk)
-    service = build('customsearch', 'v1', developerKey=cse_key)
-    field = dashboard.field.first()
+    dashboard = Dashboard.objects.get(pk=pk)  # dry
+    service = build('customsearch', 'v1', developerKey=cse_key)  # dry
+    field = dashboard.field.first()  # dry
     stats, _, _ = [texts for texts in get_text(field.field, field.aoc)]
     starters = [json.loads(json.dumps(service.cse().list(
         q=stats[resp], cx=cx_key
@@ -85,8 +85,7 @@ def advance(pk: int, link_set: dict) -> None:
         title=item[0], link=item[1], description=item[2]
     ) for item in attributes])
     field = Dashboard.objects.get(pk=pk).field.first()
-    pk = field.guide.pk
-    guide = Guide.objects.get(pk=pk)
+    guide = Guide.objects.get(pk=field.guide.pk)
     guide.advanced.add(*[obj for obj in advance_objects])
     field.save()
 

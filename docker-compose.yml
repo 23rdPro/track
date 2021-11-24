@@ -1,67 +1,70 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  web:
-#    restart: always  # production
-    build:
-      context: .
-#    expose:
-#      - "8000"
-#    links:
-#      - postgres:postgres
-#      - redis:redis
+
+  django:
+    build: .
+    container_name: trackapp
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    stdin_open: true
+    tty: true
+    volumes:
+    - .:/track
+    ports:
+    - "8000:8000"
+    env_file:
+      - ./track/.env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:9.6.10-alpine
+    container_name: pgtrack
+    restart: always
+    user: postgres
+    volumes:
+    - trackdb:/var/lib/postgresql/data/
+    env_file:
+      - ./track/.env
+
+  redis:
+    image: redis:6.0-alpine
+    restart: always
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
+
+  celery:
+    restart: always
+    build: .
+    command: >
+      sh -c "celery -A track worker -l info -f output"
     volumes:
       - .:/track
-#    tmpfs:
-#      - /tmp
-    env_file: ./track/.env
-    environment:
-      DEBUG: 'true'
-#    command: /usr/local/bin/gunicorn track.wsgi:application -w 2 -b :8000
-    command: python manage.py runserver 0.0.0.0:8000
-#    command: gunicorn track.wsgi:application --bind 0.0.0.0:8000  # production
-    ports:
-    - 8000:8000
     depends_on:
-      - postgres
+      - redis
+      - db
+      - django
+    env_file:
+      - ./track/.env
 
-#  nginx:
-#    restart: always
-#    build: ./nginx/
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - web-static:/www/static
-#    links:
-#      - web:web
-
-  postgres:
-    restart: always
-    image: postgres:9.6.10-alpine
-    ports:
-      - "5432:5432"
+  celery-beat:
+    build: .
+    command: >
+      sh -c "celery -A track beat -l info -f output"
     volumes:
-      - pgdata:/var/lib/postgresql/data/
-#      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=track
-      - POSTGRES_PASSWORD=track
-      - POSTGRES_DB=track_dev
-#    env_file:
-#      - ./track/.env
-
-#  redis:
-#    restart: always
-#    image: redis:latest
-#    ports:
-#      - "6379:6379"
-#    volumes:
-#      - redisdata:/data
+    - .:/track
+    depends_on:
+      - redis
+      - db
+      - django
+    env_file:
+      - ./track/.env
 
 volumes:
-  track:
-#  track:
-#  web-django:
-#  web-static:
-  pgdata:
-#  redisdata:
+  trackdb:
