@@ -1,4 +1,4 @@
-# flake8: noqa
+import re
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
@@ -9,12 +9,14 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, username, password, **extras):
-        # to avoid tight-coupling / circular dependency, memory leak,
-        # infinite recursions
-        from .models import User
+        from .models import User, BlackListedUsername
 
         if not email and not username:
             raise ValueError(_('Email and Username are required'))
+        elif BlackListedUsername.objects.filter(username=username).exists():
+            raise ValueError(_('Username is not valid'))
+        elif not re.match(r'^[a-z0-9]*$', username):
+            raise ValueError(_('Username may only contain letters and numbers'))
         email = self.normalize_email(email)
         user_model = User
         username = user_model.normalize_username(username)
@@ -26,7 +28,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extras):
         extras.setdefault('is_superuser', False)
         extras.setdefault('is_staff', False)
-        extras.setdefault('is_active', True)
+        # extras.setdefault('is_active', True)
 
         if extras.get('is_superuser') is not False:
             raise ValueError('This action is not permitted')

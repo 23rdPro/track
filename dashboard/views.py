@@ -13,8 +13,12 @@ from dashboard.forms import (
     AddDashboardFieldForm,
     CreateDashboardPublicationForm
 )
-from dashboard.models import Dashboard, Field, Guide
+from dashboard.models import Dashboard
+from dashboard.serializers import DashboardSerializer
+from field.models import Field
+from guide.models import Guide
 from publication.models import Publication
+from rest_framework import viewsets
 
 
 class DashboardListView(LoginRequiredMixin, ListView):
@@ -55,8 +59,7 @@ class AddDashboardFormView(LoginRequiredMixin, FormView):
         field.guide = guide
         field.save()
 
-        dashboard = Dashboard()
-        dashboard.save()
+        dashboard = Dashboard().save()
         dashboard.field.add(field)
         dashboard.publication.add(publication)
         self.pk = dashboard.pk
@@ -139,3 +142,9 @@ class DashboardDetailView(LoginRequiredMixin, FormMixin, DetailView):
         # floating- unused, thus publication is only added
         # here afterwards
         obj.publication.add(publication)
+
+
+# REST
+class DashboardRESTView(viewsets.ModelViewSet):
+    serializer_class = DashboardSerializer
+    queryset = Dashboard.objects.all()  # get_queryset

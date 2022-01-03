@@ -15,11 +15,6 @@ class PublicationFactory(factory.django.DjangoModelFactory):
     author = factory.SubFactory("users.factories.UserFactory")
     title = factory.Sequence(lambda i: "title0%d" % i)
     description = factory.Sequence(lambda i: "description0%d" % i)
-    # upload_pdf = factory.LazyAttribute(
-    #     lambda _: ContentFile(factory.django.FileField(),
-    #                           factory.Sequence(
-    #                               lambda i: "sample0%d.pdf" % i
-    #                           )))  todo
 
     @classmethod
     def _setup_next_sequence(cls):

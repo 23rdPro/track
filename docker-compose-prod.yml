@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+
+  django:
+    build: .
+    container_name: trackapp
+    command: gunicorn track.wsgi:application --bind 0.0.0.0:8000
+    stdin_open: true
+    tty: true
+    expose:
+      - 8000
+    env_file:
+      - ./track/.env
+    depends_on:
+      - db
+      - redis
+
+  ngnix:
+    build: ./nginx
+    ports:
+    - 1010:80
+    depends_on:
+      - django
+
+  db:
+    image: postgres:9.6.10-alpine
+    container_name: pgtrack
+    restart: always
+    user: track_db
+    volumes:
+      - trackdb:/var/lib/postgresql/data/
+    env_file:
+      - ./track/.env
+
+  redis:
+    image: redis:6.0-alpine
+    restart: always
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
+
+  celery:
+    restart: always
+    build: .
+    command: >
+      sh -c "celery -A track worker -l info -f output"
+    volumes:
+      - .:/track
+    depends_on:
+      - redis
+      - db
+      - django
+    env_file:
+      - ./track/.env
+
+  celery-beat:
+    build: .
+    command: >
+      sh -c "celery -A track beat -l info -f output"
+    volumes:
+      - .:/track
+    depends_on:
+      - redis
+      - db
+      - django
+    env_file:
+      - ./track/.env
+
+volumes:
+  trackdb:

@@ -19,9 +19,5 @@ class PublicationAdmin(admin.ModelAdmin):
         else:
             super(PublicationAdmin, self).delete_model(request, obj)
 
-    # def get_queryset(self, request):
-    #     return super(PublicationAdmin, self).get_queryset(
-    #         request).select_related('author')
-
 
 admin.site.register(Publication, PublicationAdmin)

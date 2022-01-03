@@ -3,14 +3,15 @@ import os
 
 def get_text(field: str, aoc: str):
     qualifiers = ['beginner ', '', 'advanced ']
-    # todo, more qualifiers
     text = field+' '+aoc
     for q in qualifiers:
         term = q+text
+        article = term+' '+'~article'
         pdf = term+' '+'~pdf'
         klass = term+' '+'~class'
         video = term+' '+'~video'
-        yield [term, pdf, klass, video]
+        question = term+' '+'~question'
+        yield [article, pdf, klass, video, question]
 
 
 def delete_file(path):
@@ -23,3 +24,12 @@ def upload_to_path(instance, filename):
         instance.author_id,
         filename,
     )
+
+
+def run_check(result: list, link_set: dict):
+    attributes = []
+    for items in result:
+        if items['link'] not in link_set:
+            attributes.append((items['title'], items['link'], items['snippet']))
+            link_set[items['link']] = items['link']
+    return attributes

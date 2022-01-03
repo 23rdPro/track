@@ -142,6 +142,10 @@ track.iml
 
 static/
 
-celerybeat-schedule
-
 output
+
+nginx
+
+docker-entrypoint-initdb.d
+
+**/node_modules/**

@@ -40,3 +40,9 @@ coverage.xml
 celerybeat-schedule
 
 output
+
+nginx
+docker-entrypoint-initdb.d
+
+**/node_modules/**
+

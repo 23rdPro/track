@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', None)
 
-ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]"]
+ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]", "localhost:3000"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     'crispy_forms',
 
@@ -43,8 +46,11 @@ INSTALLED_APPS = [
     'django_celery_results',
 
     'users',
-    'dashboard',
-    'publication',
+    'dashboard.apps.DashboardConfig',
+    'field.apps.FieldConfig',
+    'guide.apps.GuideConfig',
+    'publication.apps.PublicationConfig',
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +61,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# Cross-Origin Resource Sharing (CORS)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000"
+]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000"
+]
+
 
 ROOT_URLCONF = 'track.urls'
 
@@ -65,6 +84,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR / 'templates'),
             os.path.join(BASE_DIR / 'auth_templates'),
+            os.path.join(BASE_DIR / 'build'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,6 +102,20 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    "DEFAULT_PAGINATION_CLASS": 'rest_framework.pagination.PageNumberPagination',
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}
 
 SITE_ID = 1
 
@@ -213,6 +247,8 @@ CELERY_TASK_TRACK_STARTED = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', False)
-
-SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', False)
+# CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', False)
+#
+# SESSION_COOKIE_SECURE = os.environ.get(
+#     'SESSION_COOKIE_SECURE', False
+# )

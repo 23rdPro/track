@@ -1,6 +1,6 @@
 from celery import group
 from django.db import transaction
-from django.db.models.signals import m2m_changed, pre_delete
+from django.db.models.signals import m2m_changed, pre_delete, post_save
 from django.dispatch import receiver
 
 from dashboard import tasks
@@ -9,14 +9,20 @@ from helpers.functions import delete_file
 
 
 @receiver(m2m_changed, sender=Dashboard.field.through)
-def track_dashboard(sender, instance, action, **kwargs):
+def run_track(sender, instance, action, **kwargs):
     if action == 'post_add':
-        # todo how to ensure each job in group completes successfully,
-        #  gracefully handle timeout- set retries: 3 in service build
-        link_set = {}
-        transaction.on_commit(
-            lambda: group(parallel.delay(instance.pk, link_set)
-                          for parallel in tasks.parallels)())
+        print("run track starteddddddddddddddddddddddd!!!!!!!")
+
+
+# @receiver(m2m_changed, sender=Dashboard.field.through)
+# def track_dashboard(sender, instance, action, **kwargs):
+#     if action == 'post_add':
+#         # todo how to ensure each job in group completes successfully,
+#         #  gracefully handle timeout- set retries: 3 in service build
+#         link_set = {}  # origin
+#         transaction.on_commit(
+#             lambda: group(parallel.delay(instance.pk, link_set)
+#                           for parallel in tasks.parallels)())
 
 
 @receiver(pre_delete, sender=Dashboard)
