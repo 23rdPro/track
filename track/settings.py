@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'field.apps.FieldConfig',
     'guide.apps.GuideConfig',
     'publication.apps.PublicationConfig',
-    'frontend',
+
 ]
 
 MIDDLEWARE = [

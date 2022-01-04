@@ -141,10 +141,15 @@ track.iml
 **/migrations/**
 
 static/
+media/
+auth_templates/
+templates/
+.dockerignore
+.gitignore
 
 output
 
-nginx
+nginx/
 
 docker-entrypoint-initdb.d
 

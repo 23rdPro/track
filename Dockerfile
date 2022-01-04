@@ -17,6 +17,10 @@ RUN apt-get update \
 
 COPY . .
 
+#RUN chmod +x /entrypoint.sh
+
 ENV DJANGO_SETTINGS_MODULE track.settings
+
+#ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 8000

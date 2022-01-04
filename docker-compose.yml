@@ -43,7 +43,7 @@ services:
     restart: always
     build: .
     command: >
-      sh -c "celery -A track worker -l info -f output"
+      sh -c "celery -A track worker -l info"
     volumes:
       - .:/track
     depends_on:
@@ -56,7 +56,7 @@ services:
   celery-beat:
     build: .
     command: >
-      sh -c "celery -A track beat -l info -f output"
+      sh -c "celery -A track beat -l info "
     volumes:
     - .:/track
     depends_on:
