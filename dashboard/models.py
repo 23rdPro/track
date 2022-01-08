@@ -6,13 +6,8 @@ from track.mixins import TimeStampMixin
 
 
 class Dashboard(TimeStampMixin):
-    """
-    collection of submitted keys/words to track- user's dashboard is distinguished
-    with both attributes for uniqueness. each object has ratio one field : one
-    publication && one field : multiple publications only
-    """
     field = models.ForeignKey('field.Field', related_name='dashboard_field',
-                              on_delete=models.CASCADE)
+                              on_delete=models.CASCADE, null=True, blank=True)
     publication = models.ManyToManyField('publication.Publication',
                                          related_name='dashboard_publication')
     objects = DashboardObjectManager()

@@ -8,12 +8,6 @@ from dashboard.models import Dashboard
 from helpers.functions import delete_file
 
 
-@receiver(post_save, sender=Dashboard)
-def run_track(sender, created, instance, **kwargs):
-    if created and instance:
-        print('run track starteddddddddddddddddddddddd!!!')
-
-
 # @receiver(m2m_changed, sender=Dashboard.field.through)
 # def run_track(sender, instance, action, **kwargs):
 #     if action == 'post_add':

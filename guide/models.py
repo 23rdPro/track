@@ -4,10 +4,10 @@ from django.db import models
 class Guide(models.Model):
     """
     Guide is a data model, each member attribute made up of links
-    generated with google-cse api on chosen field/keyword, it has
-    starter, intermediate, and advanced many2many attributes.
-    starter guide, for instance gathers links to books, blogs,
-    pdfs & videos from google using field and aoc as keywords,
+    generated with api on chosen field/keyword, it has
+    starter, intermediate, and advanced- many2many attributes.
+    starter-guide, for instance gathers links to books, blogs,
+    pdfs & videos from api using field and aoc as keywords,
     eg: field: software engineer, aoc: python devops engineer.
     The eventual links will be collected as many2many and attributed
     to starter... and so on

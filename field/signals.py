@@ -27,5 +27,6 @@ def create_field_guide(sender, instance, created, **kwargs):
         publication = Publication()
         publication.author = request.user
         publication.save()
-        dashboard.field.add(instance)
+        dashboard.field = instance
         dashboard.publication.add(publication)
+        dashboard.save()
