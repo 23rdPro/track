@@ -8,10 +8,16 @@ from dashboard.models import Dashboard
 from helpers.functions import delete_file
 
 
-@receiver(m2m_changed, sender=Dashboard.field.through)
-def run_track(sender, instance, action, **kwargs):
-    if action == 'post_add':
-        print("run track starteddddddddddddddddddddddd!!!!!!!")
+@receiver(post_save, sender=Dashboard)
+def run_track(sender, created, instance, **kwargs):
+    if created and instance:
+        print('run track starteddddddddddddddddddddddd!!!')
+
+
+# @receiver(m2m_changed, sender=Dashboard.field.through)
+# def run_track(sender, instance, action, **kwargs):
+#     if action == 'post_add':
+#         print("run track starteddddddddddddddddddddddd!!!!!!!")
 
 
 # @receiver(m2m_changed, sender=Dashboard.field.through)
@@ -25,24 +31,24 @@ def run_track(sender, instance, action, **kwargs):
 #                           for parallel in tasks.parallels)())
 
 
-@receiver(pre_delete, sender=Dashboard)
-def delete_related_attributes(sender, instance, *args, **kwargs):
-    field = instance.field.first()
-    guide = field.guide
-    for starter in guide.starter.all():
-        starter.delete()
-    for intermediate in guide.intermediate.all():
-        intermediate.delete()
-    for advanced in guide.advanced.all():
-        advanced.delete()
-    guide.delete()
-    field.delete()
-    publications = instance.publication.all()
-    try:
-        files = (obj.upload_pdf.path for obj in publications)
-        for file in files:
-            delete_file(file)
-    except ValueError:
-        pass
-    for publication in publications:
-        publication.delete()
+# @receiver(pre_delete, sender=Dashboard)
+# def delete_related_attributes(sender, instance, *args, **kwargs):
+#     field = instance.field.first()
+#     guide = field.guide
+#     for starter in guide.starter.all():
+#         starter.delete()
+#     for intermediate in guide.intermediate.all():
+#         intermediate.delete()
+#     for advanced in guide.advanced.all():
+#         advanced.delete()
+#     guide.delete()
+#     field.delete()
+#     publications = instance.publication.all()
+#     try:
+#         files = (obj.upload_pdf.path for obj in publications)
+#         for file in files:
+#             delete_file(file)
+#     except ValueError:
+#         pass
+#     for publication in publications:
+#         publication.delete()

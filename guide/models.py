@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 
 class Guide(models.Model):
@@ -34,9 +33,6 @@ class Guide(models.Model):
         related_name='guide_question', null=True
     )
     objects = models.Manager()
-
-    def __class_name__(self):  # todo return class name as str
-        pass
 
 
 class Article(models.Model):
@@ -110,15 +106,8 @@ class StarterGuide(models.Model):
     link = models.URLField()
     objects = models.Manager()
 
-    # to bulk_create and save
-    def save(
-            self, force_insert=False, force_update=False,
-            using=None, update_fields=None
-    ):
-        instance = super(StarterGuide, self).save(
-            force_insert, force_update, using,
-            update_fields
-        )
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        instance = super(StarterGuide, self).save(force_insert, force_update, using, update_fields)
         return instance
 
 
@@ -128,11 +117,8 @@ class IntermediateGuide(models.Model):
     link = models.URLField()
     objects = models.Manager()
 
-    def save(self, force_insert=False, force_update=False,
-             using=None, update_fields=None):
-        instance = super(IntermediateGuide, self).save(
-            force_insert, force_update, using, update_fields
-        )
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        instance = super(IntermediateGuide, self).save(force_insert, force_update, using, update_fields)
         return instance
 
 
@@ -142,9 +128,6 @@ class AdvancedGuide(models.Model):
     link = models.URLField()
     objects = models.Manager()
 
-    def save(self, force_insert=False, force_update=False,
-             using=None, update_fields=None):
-        instance = super(AdvancedGuide, self).save(
-            force_insert, force_update, using, update_fields
-        )
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        instance = super(AdvancedGuide, self).save(force_insert, force_update, using, update_fields)
         return instance

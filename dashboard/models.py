@@ -7,15 +7,18 @@ from track.mixins import TimeStampMixin
 
 class Dashboard(TimeStampMixin):
     """
-    collection of submitted keys/words to track- user's dashboard is distinguished with both attributes for
-    uniqueness. each object has ratio one field : one publication && one field : multiple publications only
+    collection of submitted keys/words to track- user's dashboard is distinguished
+    with both attributes for uniqueness. each object has ratio one field : one
+    publication && one field : multiple publications only
     """
-    field = models.ManyToManyField('field.Field', related_name='dashboard_field')
-    publication = models.ManyToManyField('publication.Publication', related_name='dashboard_publication')
+    field = models.ForeignKey('field.Field', related_name='dashboard_field',
+                              on_delete=models.CASCADE)
+    publication = models.ManyToManyField('publication.Publication',
+                                         related_name='dashboard_publication')
     objects = DashboardObjectManager()
 
     class Meta:
-        ordering = ['updated']
+        ordering = ['updated_at']
 
     def get_absolute_url(self):
         return reverse('dashboard:detail', kwargs={'pk': self.pk})

@@ -1,4 +1,3 @@
-# flake8: noqa
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -29,7 +28,7 @@ class DashboardListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         return Dashboard.objects.filter(
-            publication__author=user).prefetch_related('field')
+            publication__author=user).select_related('field')
 
     def get_context_data(self, **kwargs):
         context = super(DashboardListView,
@@ -59,9 +58,10 @@ class AddDashboardFormView(LoginRequiredMixin, FormView):
         field.guide = guide
         field.save()
 
-        dashboard = Dashboard().save()
-        dashboard.field.add(field)
+        dashboard = Dashboard()
+        dashboard.field = field
         dashboard.publication.add(publication)
+        dashboard.save()
         self.pk = dashboard.pk
         return super(AddDashboardFormView, self).form_valid(form)
 
@@ -144,7 +144,6 @@ class DashboardDetailView(LoginRequiredMixin, FormMixin, DetailView):
         obj.publication.add(publication)
 
 
-# REST
 class DashboardRESTView(viewsets.ModelViewSet):
     serializer_class = DashboardSerializer
     queryset = Dashboard.objects.all()  # get_queryset

@@ -12,7 +12,11 @@ from guide.models import (
 class StarterSerializer(serializers.ModelSerializer):
     class Meta:
         model = StarterGuide
-        fields = ['title', 'description', 'link']
+        fields = [
+            'title',
+            'description',
+            'link'
+        ]
 
 
 class IntermediateSerializer(serializers.ModelSerializer):
@@ -86,4 +90,10 @@ class GuideSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Guide
-        fields = ['article', 'pdf', 'klass', 'video', 'question']
+        fields = [
+            'article',
+            'pdf',
+            'klass',
+            'video',
+            'question'
+        ]

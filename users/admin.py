@@ -15,7 +15,7 @@ class UserAdmin(BaseUserAdmin):
 
     list_display = (
         'username', 'email', 'is_active',
-        'name',
+        'id'
     )
     list_filter = ('is_staff', 'is_superuser',
                    'is_active', 'groups',
