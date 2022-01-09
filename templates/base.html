@@ -1,156 +1,157 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
-<head>
-    {% load static %}
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>track</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
-    <link href='{% static "img/favicon.png" %}' rel="icon">
-    <link href='{% static "img/apple-touch-icon.png" %}' rel="apple-touch-icon">
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet">
-    <link href='{% static "css/bootstrap/css/bootstrap.min.css" %}' rel="stylesheet">
-    <link href='{% static "css/bootstrap-icons/bootstrap-icons.css" %}' rel="stylesheet">
-    <link href='{% static "css/remixicon/remixicon.css" %}' rel="stylesheet">
-    <link href='{% static "css/boxicons/css/boxicons.min.css" %}' rel="stylesheet">
-    <link href='{% static "css/quill/quill.snow.css" %}' rel="stylesheet">
-    <link href='{% static "css/quill/quill.bubble.css" %}' rel="stylesheet">
-    <link href='{% static "css/simple-datatables/style.css" %}' rel="stylesheet">
-    <link href='{% static "css/style.css" %}' rel="stylesheet">
-</head>
-<body>
-    <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="" class="logo d-flex align-items-center">
-                <img src='{% static "img/logo.png" %}' alt="">
-                <span class="d-none d-lg-block">Track</span>
-            </a>
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div>
-        <div class="search-bar">
-            <form class="search-form d-flex align-items-center" method="POST" action="#">
-                {% if user.is_authenticated %}
-                    <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
-                {% else %}
-                    <input type="text" name="query" placeholder="Filter Publication" title="Enter search keyword">
-                {% endif %}
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-            </form>
-        </div>
-        <nav class="header-nav ms-auto">
-            <ul class="d-flex align-items-center">
-                <li class="nav-item d-block d-lg-none">
-                    <a class="nav-link nav-icon search-bar-toggle " href="#">
-                        <i class="bi bi-search"></i>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>track</title>
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+        <link href='{% static "img/favicon.png" %}' rel="icon">
+        <link href='{% static "img/apple-touch-icon.png" %}' rel="apple-touch-icon">
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+              rel="stylesheet">
+        <link href='{% static "css/bootstrap/css/bootstrap.min.css" %}' rel="stylesheet">
+        <link href='{% static "css/bootstrap-icons/bootstrap-icons.css" %}' rel="stylesheet">
+        <link href='{% static "css/remixicon/remixicon.css" %}' rel="stylesheet">
+        <link href='{% static "css/boxicons/css/boxicons.min.css" %}' rel="stylesheet">
+        <link href='{% static "css/quill/quill.snow.css" %}' rel="stylesheet">
+        <link href='{% static "css/quill/quill.bubble.css" %}' rel="stylesheet">
+        <link href='{% static "css/simple-datatables/style.css" %}' rel="stylesheet">
+        <link href='{% static "css/style.css" %}' rel="stylesheet">
+    </head>
+    <body>
+        {% block authentication %}{% endblock %}
+        <header id="header" class="header fixed-top d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="" class="logo d-flex align-items-center">
+                    <img src='{% static "img/logo.png" %}' alt="">
+                    <span class="d-none d-lg-block">Track</span>
+                </a>
+                <i class="bi bi-list toggle-sidebar-btn"></i>
+            </div>
+            <div class="search-bar">
+                <form class="search-form d-flex align-items-center" method="POST" action="#">
+                    {% if user.is_authenticated %}
+                        <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
+                    {% else %}
+                        <input type="text" name="query" placeholder="Filter Publication" title="Enter search keyword">
+                    {% endif %}
+                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+            <nav class="header-nav ms-auto">
+                <ul class="d-flex align-items-center">
+                    <li class="nav-item d-block d-lg-none">
+                        <a class="nav-link nav-icon search-bar-toggle " href="#">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown pe-3">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+    <!--                        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">-->
+                            {% if user.is_authenticated %}
+                                <span class="d-none d-md-block dropdown-toggle ps-2">{{ user|title }} </span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="{% url 'account_logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Sign Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <aside id="sidebar" class="sidebar">
+            <ul class="sidebar-nav" id="sidebar-nav">
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'dashboard:list' %}">
+                        <i class="bi bi-grid"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item dropdown pe-3">
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-<!--                        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">-->
-                        {% if user.is_authenticated %}
-                            <span class="d-none d-md-block dropdown-toggle ps-2">{{ user|title }} </span>
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'publication:list' %}">
+                        {% if publications %}
+                            <i class="bi bi-journal-text"></i><span>Publications</span>
+                        {% else %}
+                            <i class="bi bi-journal-text"></i><span>Publications</span>
                         {% endif %}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="{% url 'account_logout' %}">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Sign Out</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
+                {% if  not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link " href="{% url 'account_login' %}">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
-        </nav>
-</header>
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link " href="{% url 'dashboard:list' %}">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link " href="{% url 'publication:list' %}">
-                {% if publications %}
-                    <i class="bi bi-journal-text"></i><span>Publications</span>
-                {% else %}
-                    <i class="bi bi-journal-text"></i><span>Publications</span>
-                {% endif %}
-            </a>
-        </li>
-        {% if  not user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link " href="{% url 'account_login' %}">
-                    <i class="bi bi-box-arrow-in-right"></i>
-                    <span>Login</span>
-                </a>
-            </li>
-        {% endif %}
-    </ul>
-</aside>
-<main id="main" class="main">
-    <div class="pagetitle">
-        <h1>
-            {% if publications %}
-                Publications
-            {% elif dashboards %}
-                Dashboard
-            {% elif dashboard %}
-                Dashboard
-            {% endif %}
-        </h1>
-        <nav style="--bs-breadcrumb-divider: '|';">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#" >Track</a></li>
-                {% if user.is_authenticated %}
+        </aside>
+        <main id="main" class="main">
+            <div class="pagetitle">
+                <h1>
                     {% if publications %}
-                        <li class="breadcrumb-item active">Publications</li>
-                    {% elif dashboard.field %}
-                        <li class="breadcrumb-item active">
-                            <a class="breadcrumb-item active" href="" data-bs-toggle="modal"
-                               data-bs-target="#largeModal">+publish</a>
-                        </li>
-                    {% else %}
-                        <li class="breadcrumb-item active">
-                            <a class="breadcrumb-item active" data-bs-toggle="modal" data-bs-target="#fullscreenModal"
-                               href="">+add field</a>
-                        </li>
+                        Publications
+                    {% elif dashboards %}
+                        Dashboard
+                    {% elif dashboard %}
+                        Dashboard
                     {% endif %}
-                {% endif %}
-            </ol>
-        </nav>
-        <p>{% include 'modals/publish.html' %}</p>
-        <p>{% include 'modals/add_dashboard.html' %}</p>
-    </div>
-    {% block content %}{% endblock %}
-</main>
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>Track</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        Connect on <a href="https://github.com/23rdPro" target="_blank"><i class="ri-github-fill"></i> Github</a>
-    </div>
-</footer>
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-<script src='{% static "css/bootstrap/js/bootstrap.bundle.js" %}'></script>
-<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-{% block script %}{% endblock %}
-<script src='{% static "php-email-form/validate.js" %}'></script>
-<script src='{% static "css/quill/quill.min.js" %}'></script>
-<script src='{% static "tinymce/tinymce.min.js" %}'></script>
-<script src='{% static "css/simple-datatables/simple-datatables.js" %}'></script>
-<script src='{% static "chart.js/chart.min.js" %}'></script>
-<script src='{% static "apexcharts/apexcharts.min.js" %}'></script>
-<script src='{% static "echarts/echarts.min.js" %}'></script>
-<script src='{% static "js/main.js" %}'></script>
-</body>
+                </h1>
+                <nav style="--bs-breadcrumb-divider: '|';">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" >Track</a></li>
+                        {% if user.is_authenticated %}
+                            {% if publications %}
+                                <li class="breadcrumb-item active">Publications</li>
+                            {% elif dashboard.field %}
+                                <li class="breadcrumb-item active">
+                                    <a class="breadcrumb-item active" href="" data-bs-toggle="modal"
+                                       data-bs-target="#largeModal">+publish</a>
+                                </li>
+                            {% else %}
+                                <li class="breadcrumb-item active">
+                                    <a class="breadcrumb-item active" data-bs-toggle="modal" data-bs-target="#fullscreenModal"
+                                       href="">+add field</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ol>
+                </nav>
+                <p>{% include 'modals/publish.html' %}</p>
+                <p>{% include 'modals/add_dashboard.html' %}</p>
+            </div>
+            {% block content %}{% endblock %}
+        </main>
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                &copy; Copyright <strong><span>Track</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                Connect on <a href="https://github.com/23rdPro" target="_blank"><i class="ri-github-fill"></i> Github</a>
+            </div>
+        </footer>
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+        <script src='{% static "css/bootstrap/js/bootstrap.bundle.js" %}'></script>
+        <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+        {% block script %}{% endblock %}
+        <script src='{% static "php-email-form/validate.js" %}'></script>
+        <script src='{% static "css/quill/quill.min.js" %}'></script>
+        <script src='{% static "tinymce/tinymce.min.js" %}'></script>
+        <script src='{% static "css/simple-datatables/simple-datatables.js" %}'></script>
+        <script src='{% static "chart.js/chart.min.js" %}'></script>
+        <script src='{% static "apexcharts/apexcharts.min.js" %}'></script>
+        <script src='{% static "echarts/echarts.min.js" %}'></script>
+        <script src='{% static "js/main.js" %}'></script>
+    </body>
 </html>

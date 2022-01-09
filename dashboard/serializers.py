@@ -8,7 +8,7 @@ from field.serializers import FieldSerializer
 
 
 class DashboardSerializer(serializers.HyperlinkedModelSerializer):
-    field = FieldSerializer(many=True)
+    field = FieldSerializer()
     publication = serializers.StringRelatedField(many=True)
     pk = serializers.PrimaryKeyRelatedField(read_only=True)
 
