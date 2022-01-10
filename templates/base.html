@@ -22,7 +22,6 @@
         <link href='{% static "css/style.css" %}' rel="stylesheet">
     </head>
     <body>
-        {% block authentication %}{% endblock %}
         <header id="header" class="header fixed-top d-flex align-items-center">
             <div class="d-flex align-items-center justify-content-between">
                 <a href="" class="logo d-flex align-items-center">
@@ -128,8 +127,8 @@
                         {% endif %}
                     </ol>
                 </nav>
-                <p>{% include 'modals/publish.html' %}</p>
-                <p>{% include 'modals/add_dashboard.html' %}</p>
+                <p>{# include 'modals/publish.html' #}</p>
+                <p>{# include 'modals/add_dashboard.html' #}</p>
             </div>
             {% block content %}{% endblock %}
         </main>
