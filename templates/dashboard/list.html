@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags dashboard_template_filters %}
 
 {% block content %}
     <section class="section">
@@ -10,16 +10,30 @@
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             {% for dashboard in dashboards %}
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingOne">
+                                    <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                                aria-controls="flush-collapseOne">
+                                                aria-expanded="false">
                                             {{dashboard.field.field|title}} | {{dashboard.field.aoc|lower}}
                                         </button>
                                     </h2>
-                                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
-                                         data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">Placeholder content for this accordion.</div>
+                                    <div class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            {% for item in  guide_attributes %}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                                aria-expanded="false">
+                                                            {{item}}
+                                                        </button>
+                                                    </h2>
+                                                    <div class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                                        <div class="accordion-body">
+                                                            Placeholder for accordion items
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -30,4 +44,37 @@
         </div>
     </section>
 {% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('.accordion-header').each(function (i){
+                $(this).attr('id', 'flush-heading'+(i+1));
+            });
+
+            $('.accordion-button.collapsed').each(function (i){
+                $(this).attr('data-bs-target', '#flush-collapse'+(i+1));
+                $(this).attr('aria-controls', 'flush-collapse'+(i+1));
+            });
+
+            $('.accordion-collapse.collapse').each(function (i){
+                $(this).attr('id', 'flush-collapse'+(i+1));
+                $(this).attr('aria-labelledby', 'flush-heading'+(i+1));
+            });
+        });
+    </script>
+{% endblock %}
+{# block script #}
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $(".accordion-button.collapsed").each(function (){
+                let $this = $(this);
+                $this.on("click", function (){
+                    var id = $(this).data('key');
+                    $(`button[data-key=${id}]`).attr("data-bs-toggle", "collapse");
+                    $(`div[data-key=${id}]`).attr("id", "flush-collapseOne");
+                });
+            });
+        });
+    </script>
+{# endblock #}
 

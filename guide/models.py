@@ -34,6 +34,10 @@ class Guide(models.Model):
     )
     objects = models.Manager()
 
+    @staticmethod
+    def get_attributes():
+        return (attr for attr in ['Articles', 'PDFs', 'Online Classes', 'Videos', 'Questions'])
+
 
 class Article(models.Model):
     starter = models.ManyToManyField(

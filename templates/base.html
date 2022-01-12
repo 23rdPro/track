@@ -79,11 +79,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " href="{% url 'publication:list' %}">
-                        {% if publications %}
-                            <i class="bi bi-journal-text"></i><span>Publications</span>
-                        {% else %}
-                            <i class="bi bi-journal-text"></i><span>Publications</span>
-                        {% endif %}
+                        <i class="bi bi-journal-text"></i><span>Publications</span>
                     </a>
                 </li>
                 {% if  not user.is_authenticated %}
@@ -100,30 +96,24 @@
             <div class="pagetitle">
                 <h1>
                     {% if publications %}
-                        Publications
-                    {% elif dashboards %}
-                        Dashboard
-                    {% elif dashboard %}
+                        Publication
+                    {% else %}
                         Dashboard
                     {% endif %}
                 </h1>
                 <nav style="--bs-breadcrumb-divider: '|';">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#" >Track</a></li>
-                        {% if user.is_authenticated %}
-                            {% if publications %}
-                                <li class="breadcrumb-item active">Publications</li>
-                            {% elif dashboard.field %}
-                                <li class="breadcrumb-item active">
-                                    <a class="breadcrumb-item active" href="" data-bs-toggle="modal"
-                                       data-bs-target="#largeModal">+publish</a>
-                                </li>
-                            {% else %}
-                                <li class="breadcrumb-item active">
-                                    <a class="breadcrumb-item active" data-bs-toggle="modal" data-bs-target="#fullscreenModal"
-                                       href="">+add field</a>
-                                </li>
-                            {% endif %}
+                        <li class="breadcrumb-item"><a href="" >Track</a></li>
+                        {% if publications %}
+                            <li class="breadcrumb-item active">
+                                <a class="breadcrumb-item active" href="" data-bs-toggle="modal"
+                                   data-bs-target="#largeModal">+publish</a>
+                            </li>
+                        {% else %}
+                            <li class="breadcrumb-item active">
+                                <a class="breadcrumb-item active" data-bs-toggle="modal" data-bs-target="#fullscreenModal"
+                                   href="">+add field</a>
+                            </li>
                         {% endif %}
                     </ol>
                 </nav>
@@ -142,7 +132,7 @@
         </footer>
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
         <script src='{% static "css/bootstrap/js/bootstrap.bundle.js" %}'></script>
-        <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+        <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         {% block script %}{% endblock %}
         <script src='{% static "php-email-form/validate.js" %}'></script>
         <script src='{% static "css/quill/quill.min.js" %}'></script>
