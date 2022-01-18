@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponseForbidden
 
 from dashboard.models import Dashboard
 from field.models import Field
@@ -24,9 +25,12 @@ def create_field_guide(sender, instance, created, **kwargs):
                 break
         else:
             request = None
-        publication = Publication()
-        publication.author = request.user
-        publication.save()
-        dashboard.field = instance
-        dashboard.publication.add(publication)
-        dashboard.save()
+        if request is not None:
+            publication = Publication()
+            publication.author = request.user
+            publication.save()
+            dashboard.field = instance
+            dashboard.publication.add(publication)
+            dashboard.save()
+        else:
+            raise HttpResponseForbidden()
