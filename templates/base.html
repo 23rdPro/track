@@ -33,7 +33,11 @@
             <div class="search-bar">
                 <form class="search-form d-flex align-items-center" method="POST" action="#">
                     {% if user.is_authenticated %}
-                        <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
+                        {% if dashboards %}
+                            <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
+                        {% elif publications %}
+                            <input type="text" name="query" placeholder="Filter Publications" title="Enter search keyword">
+                        {% endif %}
                     {% else %}
                         <input type="text" name="query" placeholder="Filter Publication" title="Enter search keyword">
                     {% endif %}
@@ -96,7 +100,7 @@
             <div class="pagetitle">
                 <h1>
                     {% if publications %}
-                        Publication
+                        Publications
                     {% else %}
                         Dashboard
                     {% endif %}
