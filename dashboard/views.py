@@ -35,6 +35,7 @@ class DashboardListView(LoginRequiredMixin, ListView):
                         self).get_context_data(**kwargs)
         context['dashboard_field_form'] = AddDashboardFieldForm()  # +add form
         context['guide_attributes'] = ['Articles', 'PDFs', 'Online Classes', 'Videos', 'Questions']
+        context['level_attributes'] = ['starter', 'intermediate', 'advanced']
         return context
 
 
