@@ -37,6 +37,8 @@
                             <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
                         {% elif publications %}
                             <input type="text" name="query" placeholder="Filter Publications" title="Enter search keyword">
+                        {% else %}
+                            <input type="text" name="query" placeholder="Filter" title="Enter search keyword">
                         {% endif %}
                     {% else %}
                         <input type="text" name="query" placeholder="Filter Publication" title="Enter search keyword">
@@ -53,7 +55,6 @@
                     </li>
                     <li class="nav-item dropdown pe-3">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-    <!--                        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">-->
                             {% if user.is_authenticated %}
                                 <span class="d-none d-md-block dropdown-toggle ps-2">{{ user|title }} </span>
                             {% endif %}
@@ -101,28 +102,28 @@
                 <h1>
                     {% if publications %}
                         Publications
-                    {% else %}
+                    {% elif dashboards %}
                         Dashboard
+                    {% else %}
+                        Welcome
                     {% endif %}
                 </h1>
                 <nav style="--bs-breadcrumb-divider: '|';">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="" >Track</a></li>
+                        {% if publications or dashboards %}
+                            <li class="breadcrumb-item"><a href="/" class="breadcrumb-item active">Track</a></li>
+                        {% endif %}
                         {% if publications %}
-                            <li class="breadcrumb-item active">
-                                <a class="breadcrumb-item active" href="" data-bs-toggle="modal"
-                                   data-bs-target="#largeModal">+publish</a>
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-item" href="">+publish</a>
                             </li>
-                        {% else %}
-                            <li class="breadcrumb-item active">
-                                <a class="breadcrumb-item active" data-bs-toggle="modal" data-bs-target="#fullscreenModal"
-                                   href="">+add field</a>
+                        {% elif dashboards %}
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-item" href="{% url 'field:create' %}">+add field</a>
                             </li>
                         {% endif %}
                     </ol>
                 </nav>
-                <p>{# include 'modals/publish.html' #}</p>
-                <p>{# include 'modals/add_dashboard.html' #}</p>
             </div>
             {% block content %}{% endblock %}
         </main>

@@ -10,28 +10,23 @@
             </div>
             <form class="row g-3 needs-validation" method="POST" action="{% url 'account_login' %}">
                 {% csrf_token %}
+                {% include 'form_error.html' %}
                 <div class="col-12">
-                    <!--                                        <label for="yourUsername" class="form-label">Username</label>-->
                     <label for="id_login" class="form-label">Email</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <!--                                            <input type="text" name="username" class="form-control" id="yourUsername" required>-->
                         <input type="email" name="login" class="form-control" autocomplete="email" required id="id_login">
                         <div class="invalid-feedback">Please enter your email.</div>
                     </div>
                 </div>
                 <div class="col-12">
-                    <!--                                        <label for="yourPassword" class="form-label">Password</label>-->
                     <label for="id_password" class="form-label">Password</label>
-                    <!--                                        <input type="password" name="passwword" class="form-control" id="yourPassword" required>-->
                     <input type="password" name="password" class="form-control" autocomplete="current-password" required id="id_password">
                     <div class="invalid-feedback">Please enter your password!</div>
                 </div>
                 <div class="col-12">
                     <div class="form-check">
-                        <!--                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">-->
                         <input class="form-check-input" type="checkbox" name="remember" id="id_remember">
-                        <!--                                            <label class="form-check-label" for="rememberMe">Remember me</label>-->
                         <label for="id_remember" class="form-check-label small mb-0">Remember Me</label>
                         <span class="small mb-0"><a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></span>
                     </div>

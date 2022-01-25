@@ -1,12 +1,9 @@
-# flake8: noqa
-
 from django.contrib import admin, messages
 
 from publication.models import Publication
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    # list_display = ('author', 'title')
     search_fields = ('description', 'title', )
     list_filter = ('author', 'title', 'description')
     list_select_related = True

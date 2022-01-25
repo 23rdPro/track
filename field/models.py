@@ -3,10 +3,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Field(models.Model):
-    field = models.CharField(max_length=255, help_text='Train as a/an (Programmer/Accountant/etc)')
+    field = models.CharField(max_length=255, help_text='powered by Google')
 
     # aoc, to help boost keywords for search api
-    aoc = models.CharField(_('area of concentration'), max_length=255, help_text='simple field description')
+    aoc = models.CharField(_('area of concentration'), max_length=255, null=True, blank=True)
 
     # one field, one guide
     guide = models.ForeignKey('guide.Guide', on_delete=models.CASCADE, null=True, blank=True,

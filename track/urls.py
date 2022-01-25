@@ -15,6 +15,7 @@ router.register(r'dashboard', dashboard_views.DashboardRESTView, basename='dashb
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('field/', include(('field.urls', 'field'), namespace='field')),
     path('', include(('publication.urls', 'publication'), namespace='publication')),
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
 

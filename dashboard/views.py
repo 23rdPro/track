@@ -21,7 +21,6 @@ from rest_framework import viewsets
 
 
 class DashboardListView(LoginRequiredMixin, ListView):
-    template_name = 'dashboard/list.html'
     context_object_name = 'dashboards'
     paginate_by = 10
 
@@ -37,6 +36,11 @@ class DashboardListView(LoginRequiredMixin, ListView):
         context['guide_attributes'] = ['Articles', 'PDFs', 'Online Classes', 'Videos', 'Questions']
         context['level_attributes'] = ['starter', 'intermediate', 'advanced']
         return context
+
+    def get_template_names(self):
+        if not self.get_queryset():
+            return 'dashboard_alert.html'
+        return 'dashboard/list.html'
 
 
 class AddDashboardFormView(LoginRequiredMixin, FormView):

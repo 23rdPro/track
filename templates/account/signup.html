@@ -10,6 +10,7 @@
             </div>
             <form class="row g-3 needs-validation" id="signup_form" method="post" action="{% url 'account_signup' %}">
                 {% csrf_token %}
+                {% include 'form_error.html' %}
                 <div class="col-12">
                     <label for="id_email" class="form-label">Email Address</label>
                     <input type="email" name="email" class="form-control" autocomplete="email" required id="id_email">
@@ -37,7 +38,7 @@
                 </div>
                 <div class="col-12">
                     {% if redirect_field_value %}
-                        <input type="text" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
                 </div>
                 <div class="col-12">
