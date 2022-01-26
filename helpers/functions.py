@@ -14,6 +14,10 @@ def get_text(field: str, aoc: str):
         yield [article, pdf, klass, video, question]
 
 
+print(list(get_text('econometrics', 'monetary 1906'))[0])
+print([text for text in get_text('econometrics', 'monetary 1906')])
+
+
 def delete_file(path):
     if os.path.isfile(path):
         os.remove(path)
