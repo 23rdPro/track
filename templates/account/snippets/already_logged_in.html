@@ -1,0 +1,9 @@
+{% load i18n %}
+{% load account %}
+
+
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <i class="bi bi-info-circle me-1"></i>
+    <strong>{% trans "Note" %}:</strong> you are already logged in as {{ user.username|title }}.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

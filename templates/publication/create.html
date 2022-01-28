@@ -1,0 +1,33 @@
+{% extends 'account/base.html' %}
+{% load i18n crispy_forms_tags %}
+
+{% block publish %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Publish Your Paper</h5>
+        </div>
+        <form class="row g-3 needs-validation" method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'form_error.html' %}
+            <div class="col-12">
+                <label for="id_title" class="form-label">Title:</label>
+                <input type="text" name="title" class="form-control" maxlength="200" required id="id_title">
+                <div class="invalid-feedback">Please enter your search details.</div>
+            </div>
+            <div class="col-12">
+                <label for="id_description" class="form-label">Description:</label>
+                <input type="text" name="description" class="form-control" maxlength="255" required id="id_description">
+                <div class="invalid-feedback">Please enter your text description of your submission!</div>
+            </div>
+            <div class="col-12">
+                <label for="id_upload_pdf" class="form-label">Upload PDF:</label>
+                <input type="file" name="upload_pdf" class="form-control" id="id_upload_pdf">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">{% trans "+Publish" %} &raquo;</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

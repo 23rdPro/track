@@ -6,8 +6,8 @@ from track.mixins import TimeStampMixin
 
 
 class Dashboard(TimeStampMixin):
+    user = models.OneToOneField('users.User', related_name='dashboard_user', on_delete=models.CASCADE)
     field = models.ForeignKey('field.Field', related_name='dashboard_field', on_delete=models.CASCADE)
-    publication = models.ManyToManyField('publication.Publication', related_name='dashboard_publication')
     objects = DashboardObjectManager()
 
     class Meta:

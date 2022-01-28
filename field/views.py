@@ -11,13 +11,12 @@ from field.serializers import FieldSerializer
 
 class CreateFieldView(LoginRequiredMixin, CreateView):
     model = Field
-    template_name = 'field/create.html'
     fields = ['field', 'aoc']
     success_url = reverse_lazy('dashboard:list')
 
     def get_template_names(self):
         qs_count = Dashboard.objects.filter(created_at__date=timezone.now()).count()
-        if qs_count <= 4:
+        if qs_count <= 6:
             return 'field/create.html'
         return 'dashboard_alert.html'
 
