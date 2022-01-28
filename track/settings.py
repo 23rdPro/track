@@ -134,13 +134,13 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 1800
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # TODO check PasswordChangeView
-# ACCOUNT_ADAPTER = 'users.adapter.UserAccountAdapter'
+ACCOUNT_ADAPTER = 'users.adapter.UserAccountAdapter'
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-LOGIN_REDIRECT_URL = 'dashboard:list'
+LOGIN_REDIRECT_URL = 'publication:list'
 
 # LOGIN_URL = 'account_login'
 

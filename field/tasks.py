@@ -35,7 +35,7 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(articles, link_set)])
     article = Article.objects.get(pk=a_pk)
     # article = Article.objects.get(keys['article'])
-    article.starter.add(article_objects)
+    article.starter.add(*article_objects)
 
     pdfs = json.loads(json.dumps(service.cse().list(
         q=stats[1], cx=cx_key).execute()))['items']
@@ -44,7 +44,7 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(pdfs, link_set)])
     pdf = PDF.objects.get(pk=p_pk)
     # pdf = PDF.objects.get(keys['pdf'])
-    pdf.starter.add(pdf_objects)
+    pdf.starter.add(*pdf_objects)
 
     classes = json.loads(json.dumps(service.cse().list(
         q=stats[2], cx=cx_key).execute()))['items']
@@ -53,7 +53,7 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(classes, link_set)])
     klass = Klass.objects.get(pk=c_pk)
     # klass = Klass.objects.get(keys['klass'])
-    klass.starter.add(class_objects)
+    klass.starter.add(*class_objects)
 
     videos = json.loads(json.dumps(service.cse().list(
         q=stats[3], cx=cx_key).execute()))['items']
@@ -62,7 +62,7 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(videos, link_set)])
     video = Video.objects.get(pk=v_pk)
     # video = Video.objects.get(keys['video'])
-    video.starter.add(video_objects)
+    video.starter.add(*video_objects)
 
     questions = json.loads(json.dumps(service.cse().list(
         q=stats[4], cx=cx_key).execute()))['items']
@@ -71,7 +71,7 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(questions, link_set)])
     question = Question.objects.get(pk=q_pk)
     # question = Question.objects.get(keys['question'])
-    question.starter.add(question_objects)
+    question.starter.add(*question_objects)
     return link_set
 
 
@@ -89,7 +89,7 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
     ) for item in run_check(articles, link_set)])
     article = Article.objects.get(pk=a_pk)
     # article = Article.objects.get(keys['article'])
-    article.intermediate.add(article_objects)
+    article.intermediate.add(*article_objects)
 
     pdfs = json.loads(json.dumps(service.cse().list(
         q=ints[1], cx=cx_key).execute()))['items']
@@ -98,7 +98,7 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
     ) for item in run_check(pdfs, link_set)])
     pdf = PDF.objects.get(pk=p_pk)
     # pdf = PDF.objects.get(keys['pdf'])
-    pdf.intermediate.add(pdf_objects)
+    pdf.intermediate.add(*pdf_objects)
 
     classes = json.loads(json.dumps(service.cse().list(
         q=ints[2], cx=cx_key).execute()))['items']
@@ -107,7 +107,7 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
     ) for item in run_check(classes, link_set)])
     klass = Klass.objects.get(pk=c_pk)
     # klass = Klass.objects.get(keys['klass'])
-    klass.intermediate.add(class_objects)
+    klass.intermediate.add(*class_objects)
 
     videos = json.loads(json.dumps(service.cse().list(
         q=ints[3], cx=cx_key).execute()))['items']
@@ -116,7 +116,7 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
     ) for item in run_check(videos, link_set)])
     video = Video.objects.get(pk=v_pk)
     # video = Video.objects.get(keys['video'])
-    video.intermediate.add(video_objects)
+    video.intermediate.add(*video_objects)
 
     questions = json.loads(json.dumps(service.cse().list(
         q=ints[4], cx=cx_key).execute()))['items']
@@ -125,7 +125,7 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
     ) for item in run_check(questions, link_set)])
     question = Question.objects.get(pk=q_pk)
     # question = Question.objects.get(keys['question'])
-    question.intermediate.add(question_objects)
+    question.intermediate.add(*question_objects)
     return link_set
 
 
@@ -143,7 +143,7 @@ def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(articles, link_set)])
     article = Article.objects.get(pk=a_pk)
     # article = Article.objects.get(keys['article'])
-    article.advanced.add(article_objects)
+    article.advanced.add(*article_objects)
 
     pdfs = json.loads(json.dumps(service.cse().list(
         q=advs[1], cx=cx_key).execute()))['items']
@@ -152,7 +152,7 @@ def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(pdfs, link_set)])
     pdf = PDF.objects.get(pk=p_pk)
     # pdf = PDF.objects.get(keys['pdf'])
-    pdf.advanced.add(pdf_objects)
+    pdf.advanced.add(*pdf_objects)
 
     classes = json.loads(json.dumps(service.cse().list(
         q=advs[2], cx=cx_key).execute()))['items']
@@ -161,7 +161,7 @@ def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(classes, link_set)])
     klass = Klass.objects.get(pk=c_pk)
     # klass = Klass.objects.get(keys['klass'])
-    klass.advanced.add(class_objects)
+    klass.advanced.add(*class_objects)
 
     videos = json.loads(json.dumps(service.cse().list(
         q=advs[3], cx=cx_key).execute()))['items']
@@ -170,7 +170,7 @@ def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(videos, link_set)])
     video = Video.objects.get(pk=v_pk)
     # video = Video.objects.get(keys['video'])
-    video.advanced.add(video_objects)
+    video.advanced.add(*video_objects)
 
     questions = json.loads(json.dumps(service.cse().list(
         q=advs[4], cx=cx_key).execute()))['items']
@@ -179,7 +179,7 @@ def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
     ) for item in run_check(questions, link_set)])
     question = Question.objects.get(pk=q_pk)
     # question = Question.objects.get(keys['question'])
-    question.advanced.add(question_objects)
+    question.advanced.add(*question_objects)
     return link_set
 
 

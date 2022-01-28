@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from dashboard import views as dashboard_views
+from dashboard import api as dashboard_views
 from field import views as field_views
 from users import views
 
@@ -15,6 +15,7 @@ from users import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('user/', include(('users.urls', 'users'), namespace='users')),
     path('field/', include(('field.urls', 'field'), namespace='field')),
     path('', include(('publication.urls', 'publication'), namespace='publication')),
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),

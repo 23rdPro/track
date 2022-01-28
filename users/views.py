@@ -1,12 +1,16 @@
-# flake8: noqa
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView
 
-from rest_framework import viewsets, permissions
-
+from users.forms import UserUpdateAfterSignupForm
 from users.models import User
-from users.serializers import UserSerializer
 
 
-# REST
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-updated_at')
-    serializer_class = UserSerializer
+class UserUpdateAfterSignupView(LoginRequiredMixin, UpdateView):
+    model = User
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+    form_class = UserUpdateAfterSignupForm
+    template_name = 'account/user_update_after_signup.html'
+    context_object_name = 'user'
+    success_url = reverse_lazy('dashboard:list')
