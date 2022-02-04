@@ -3,35 +3,22 @@ from django.db import models
 
 class Guide(models.Model):
     """
-    Guide is a data model, each member attribute made up of links
-    generated with api on chosen field/keyword, it has
-    starter, intermediate, and advanced- many2many attributes.
-    starter-guide, for instance gathers links to books, blogs,
-    pdfs & videos from api using field and aoc as keywords,
-    eg: field: software engineer, aoc: python devops engineer.
-    The eventual links will be collected as many2many and attributed
-    to starter... and so on
+    Guide is a data model, each member attribute made up of links generated with api on chosen
+    field/keyword, it has starter, intermediate, and advanced- many2many attributes
+    starter-guide, for instance gathers links to books, blogs, pdfs & videos from api using
+    field and aoc as keywords, eg: field: software engineer, aoc: python devops engineer.
+    The eventual links will be collected as many2many and attributed to starter... and so on
     """
     article = models.ForeignKey(
-        'Article', on_delete=models.CASCADE, blank=True,
-        related_name='guide_article', null=True
-    )
+        'Article', on_delete=models.CASCADE, blank=True, related_name='guide_article', null=True)
     pdf = models.ForeignKey(
-        'PDF', on_delete=models.CASCADE, blank=True,
-        related_name='guide_pdf', null=True
-    )
+        'PDF', on_delete=models.CASCADE, blank=True, related_name='guide_pdf', null=True)
     klass = models.ForeignKey(
-        "Klass", on_delete=models.CASCADE, blank=True,
-        related_name='guide_klass', null=True
-    )
+        "Klass", on_delete=models.CASCADE, blank=True, related_name='guide_klass', null=True)
     video = models.ForeignKey(
-        "Video", on_delete=models.CASCADE, blank=True,
-        related_name='guide_video', null=True
-    )
+        "Video", on_delete=models.CASCADE, blank=True, related_name='guide_video', null=True)
     question = models.ForeignKey(
-        "Question", on_delete=models.CASCADE, blank=True,
-        related_name='guide_question', null=True
-    )
+        "Question", on_delete=models.CASCADE, blank=True, related_name='guide_question', null=True)
     objects = models.Manager()
 
     @staticmethod
@@ -40,74 +27,44 @@ class Guide(models.Model):
 
 
 class Article(models.Model):
-    starter = models.ManyToManyField(
-        'StarterGuide', related_name='article_starter',
-    )
-    intermediate = models.ManyToManyField(
-        'IntermediateGuide', related_name='article_inter',
-    )
-    advanced = models.ManyToManyField(
-        'AdvancedGuide', related_name='article_adv',
-    )
+    starter = models.ManyToManyField('StarterGuide', related_name='article_starter')
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='article_inter')
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='article_adv')
     objects = models.Manager()
 
 
 class PDF(models.Model):
-    starter = models.ManyToManyField(
-        'StarterGuide', related_name='pdf_starter',
-    )
-    intermediate = models.ManyToManyField(
-        'IntermediateGuide', related_name='pdf_inter',
-    )
-    advanced = models.ManyToManyField(
-        'AdvancedGuide', related_name='pdf_adv',
-    )
+    starter = models.ManyToManyField('StarterGuide', related_name='pdf_starter')
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='pdf_inter')
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='pdf_adv')
     objects = models.Manager()
 
 
 class Klass(models.Model):
-    starter = models.ManyToManyField(
-        'StarterGuide', related_name='klass_starter',
-    )
-    intermediate = models.ManyToManyField(
-        'IntermediateGuide', related_name='klass_inter',
-    )
-    advanced = models.ManyToManyField(
-        'AdvancedGuide', related_name='klass_adv',
-    )
+    starter = models.ManyToManyField('StarterGuide', related_name='klass_starter')
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='klass_inter')
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='klass_adv')
     objects = models.Manager()
 
 
 class Video(models.Model):
-    starter = models.ManyToManyField(
-        'StarterGuide', related_name='video_starter',
-    )
-    intermediate = models.ManyToManyField(
-        'IntermediateGuide', related_name='video_inter',
-    )
-    advanced = models.ManyToManyField(
-        'AdvancedGuide', related_name='video_adv',
-    )
+    starter = models.ManyToManyField('StarterGuide', related_name='video_starter')
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='video_inter')
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='video_adv')
     objects = models.Manager()
 
 
 class Question(models.Model):
-    starter = models.ManyToManyField(
-        'StarterGuide', related_name='question_starter',
-    )
-    intermediate = models.ManyToManyField(
-        'IntermediateGuide', related_name='question_inter',
-    )
-    advanced = models.ManyToManyField(
-        'AdvancedGuide', related_name='question_adv',
-    )
+    starter = models.ManyToManyField('StarterGuide', related_name='question_starter')
+    intermediate = models.ManyToManyField('IntermediateGuide', related_name='question_inter')
+    advanced = models.ManyToManyField('AdvancedGuide', related_name='question_adv')
     objects = models.Manager()
 
 
 class StarterGuide(models.Model):
     title = models.CharField(max_length=500)
     description = models.CharField(max_length=1000)
-    link = models.URLField()
+    link = models.URLField(max_length=1000)
     objects = models.Manager()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -118,7 +75,7 @@ class StarterGuide(models.Model):
 class IntermediateGuide(models.Model):
     title = models.CharField(max_length=500)
     description = models.CharField(max_length=1000)
-    link = models.URLField()
+    link = models.URLField(max_length=1000)
     objects = models.Manager()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -129,7 +86,7 @@ class IntermediateGuide(models.Model):
 class AdvancedGuide(models.Model):
     title = models.CharField(max_length=500)
     description = models.CharField(max_length=1000)
-    link = models.URLField()
+    link = models.URLField(max_length=1000)
     objects = models.Manager()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

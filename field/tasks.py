@@ -21,11 +21,11 @@ cse_key = env('CSE_KEY')
 
 
 @shared_task
-def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) -> dict:
+def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, link_set: dict) -> dict:
     service = build('customsearch', 'v1', developerKey=cse_key)
     field = Field.objects.get(pk=f_pk)
     stats, _, _ = [texts for texts in get_text(field.field, field.aoc)]
-    link_set = {}
+    # link_set = {}
 
     # order => article, pdf, class, video, question => 5
     articles = json.loads(json.dumps(service.cse().list(
@@ -76,11 +76,11 @@ def starter(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) ->
 
 
 @shared_task
-def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) -> dict:
+def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, link_set: dict) -> dict:
     service = build('customsearch', 'v1', developerKey=cse_key)
     field = Field.objects.get(pk=f_pk)
     _, ints, _ = [texts for texts in get_text(field.field, field.aoc)]
-    link_set = {}
+    # link_set = {}
 
     articles = json.loads(json.dumps(service.cse().list(
         q=ints[0], cx=cx_key).execute()))['items']
@@ -130,11 +130,11 @@ def intermediate(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: in
 
 
 @shared_task
-def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int) -> dict:
+def advance(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, link_set: dict) -> dict:
     service = build('customsearch', 'v1', developerKey=cse_key)
     field = Field.objects.get(pk=f_pk)
     _, _, advs = [texts for texts in get_text(field.field, field.aoc)]
-    link_set = {}
+    # link_set = {}
 
     articles = json.loads(json.dumps(service.cse().list(
         q=advs[0], cx=cx_key).execute()))['items']

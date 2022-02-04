@@ -1,4 +1,4 @@
-from celery import chain
+from celery import chain, group
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models.signals import post_save
@@ -33,24 +33,23 @@ def create_field_guide(sender, instance, created, **kwargs):
             video.save()
             question = Question()
             question.save()
-            guide = Guide()
-            guide.article = article
-            guide.pdf = pdf
-            guide.klass = klass
-            guide.video = video
-            guide.question = question
-            guide.save()
+            guide = Guide.objects.create(
+                article=article,
+                pdf=pdf,
+                klass=klass,
+                video=video,
+                question=question
+            )
             instance.guide = guide
+            instance.save()
 
             user = request.user
-            dashboard = Dashboard()
-            dashboard.field = instance
-            dashboard.user = user
-            dashboard.save()
+            Dashboard.objects.create(user=user, field=instance)
 
             # start tracking
-            transaction.on_commit(lambda: chain(
-                tasks.starter.s(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
-                tasks.intermediate.s(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
-                tasks.advance.s(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk)
-            ).delay())
+            link_set = dict()
+            transaction.on_commit(lambda: group([
+                tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set),
+                tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set),
+                tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set)
+            ]))
