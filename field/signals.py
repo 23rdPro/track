@@ -47,9 +47,8 @@ def create_field_guide(sender, instance, created, **kwargs):
             Dashboard.objects.create(user=user, field=instance)
 
             # start tracking
-            link_set = dict()
             transaction.on_commit(lambda: group([
-                tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set),
-                tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set),
-                tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, link_set)
+                tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
+                tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
+                tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk)
             ]))

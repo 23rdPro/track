@@ -2,13 +2,6 @@ from django.db import models
 
 
 class Guide(models.Model):
-    """
-    Guide is a data model, each member attribute made up of links generated with api on chosen
-    field/keyword, it has starter, intermediate, and advanced- many2many attributes
-    starter-guide, for instance gathers links to books, blogs, pdfs & videos from api using
-    field and aoc as keywords, eg: field: software engineer, aoc: python devops engineer.
-    The eventual links will be collected as many2many and attributed to starter... and so on
-    """
     article = models.ForeignKey(
         'Article', on_delete=models.CASCADE, blank=True, related_name='guide_article', null=True)
     pdf = models.ForeignKey(
@@ -20,10 +13,6 @@ class Guide(models.Model):
     question = models.ForeignKey(
         "Question", on_delete=models.CASCADE, blank=True, related_name='guide_question', null=True)
     objects = models.Manager()
-
-    @staticmethod
-    def get_attributes():
-        return (attr for attr in ['Articles', 'PDFs', 'Online Classes', 'Videos', 'Questions'])
 
 
 class Article(models.Model):
