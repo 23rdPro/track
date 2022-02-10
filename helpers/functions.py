@@ -24,12 +24,3 @@ def upload_to_path(instance, filename):
         instance.author_id,
         filename,
     )
-
-
-def run_check(result: list, link_set: dict):
-    attributes = []
-    for items in result:
-        if items['link'] not in link_set:
-            attributes.append((items['title'], items['link'], items['snippet']))
-            link_set[items['link']] = items['link']
-    return attributes
