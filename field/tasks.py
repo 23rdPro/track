@@ -1,6 +1,9 @@
 import json
+import logging
+from abc import ABC
 from itertools import chain
 
+import celery
 from celery import shared_task
 from googleapiclient.discovery import build
 
@@ -12,10 +15,18 @@ from track.settings import env
 
 cx_key = env('CX_KEY')
 cse_key = env('CSE_KEY')
+logger = logging.getLogger(__name__)
 
 
-@shared_task
-def basic_guide(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, d_pk: int) -> None:
+class BaseRetryTask(celery.Task, ABC):
+    autoretry_for = (Exception, )
+    retry_backoff = True
+    retry_jitter = True
+    retry_kwargs = {'max_retries': 5, 'countdown': 5}
+
+
+@shared_task(bind=True, base=BaseRetryTask)
+def basic_guide(self, a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, d_pk: int) -> None:
     service = build('customsearch', 'v1', developerKey=cse_key)
     field = Field.objects.get(pk=f_pk)
     stats, _ = get_text(field.field, field.aoc)
@@ -70,8 +81,8 @@ def basic_guide(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int
     return
 
 
-@shared_task
-def advanced_guide(a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, d_pk: int) -> None:
+@shared_task(bind=True, base=BaseRetryTask)
+def advanced_guide(self, a_pk: int, p_pk: int, c_pk: int, v_pk: int, q_pk: int, f_pk: int, d_pk: int) -> None:
     service = build('customsearch', 'v1', developerKey=cse_key)
     field = Field.objects.get(pk=f_pk)
     _, advs = get_text(field.field, field.aoc)

@@ -1,4 +1,6 @@
-from celery import chain, group
+from datetime import datetime, timedelta
+
+from celery import chain
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models.signals import post_save
@@ -51,16 +53,15 @@ def create_field_guide(sender, instance, created, **kwargs):
                 tasks.basic_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
                 tasks.advanced_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
             )
-            transaction.on_commit(lambda: job.apply_async())
-
-            # transaction.on_commit(lambda: chain(
-            #     tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
-            #     tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
-            #     tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
-            # ))
-
-            # transaction.on_commit(lambda: group([
-            #     tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
-            #     tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
-            #     tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
-            # ]))
+            transaction.on_commit(lambda: job.apply_async(
+                expires=240,
+                retry=True,
+                retry_policy={
+                    'max_retries': None,
+                    'interval_start': 0,
+                    'interval_step': 0.2,
+                    'interval_max': 0.2
+                },
+                compression='gzip',
+                ignore_result=True
+            ))
