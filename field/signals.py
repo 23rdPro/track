@@ -44,11 +44,23 @@ def create_field_guide(sender, instance, created, **kwargs):
             instance.save()
 
             user = request.user
-            Dashboard.objects.create(user=user, field=instance)
+            dd = Dashboard.objects.create(user=user, field=instance)
 
             # start tracking
-            transaction.on_commit(lambda: group([
-                tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
-                tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk),
-                tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk)
-            ]))
+            job = chain(
+                tasks.basic_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
+                tasks.advanced_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
+            )
+            transaction.on_commit(lambda: job.apply_async())
+
+            # transaction.on_commit(lambda: chain(
+            #     tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
+            #     tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
+            #     tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
+            # ))
+
+            # transaction.on_commit(lambda: group([
+            #     tasks.starter.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
+            #     tasks.intermediate.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
+            #     tasks.advance.delay(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
+            # ]))

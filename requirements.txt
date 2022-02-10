@@ -1,3 +1,4 @@
+googleapiclient
 amqp==5.0.6
 asgiref==3.4.1
 attrs==21.2.0

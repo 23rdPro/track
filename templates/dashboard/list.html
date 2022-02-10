@@ -35,15 +35,16 @@
                                                                     <div class="accordion-item" id="accordion-item-{{dashboard.pk}}-{{level|lower|replace_word}}">
                                                                         <h2 class="accordion-header" id="accordion-header-{{dashboard.pk}}-{{level|lower|replace_word}}">
                                                                             <button class="accordion-button collapsed" type="button" data-bs-target="#collapse-{{level|lower|replace_word}}"
-                                                                            data-bs-toggle="collapse" aria-expanded="false">{{level}}</button>
+                                                                            data-bs-toggle="collapse" aria-expanded="false">{{level|lower}}</button>
                                                                         </h2>
                                                                         <div class="accordion-collapse collapse" data-bs-parent="#content-accordion-{{dashboard.pk}}"
                                                                         id="collapse-{{level|lower|replace_word}}">
                                                                             <div class="accordion-body">
                                                                                 <!-- List group with Advanced Contents -->
                                                                                 <div class="list-group">
-                                                                                    {% if item == 'Articles' and level == 'starter' %}
-                                                                                    {% for sa in dashboard.field.guide.article.starter.all %}
+
+                                                                                    {% if item == 'Articles' and level == 'basic level' %}
+                                                                                    {% for sa in dashboard.field.guide.article.basic.all %}
                                                                                     <a href="{{sa.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
                                                                                             <h5 class="mb-1"></h5>
@@ -53,8 +54,9 @@
                                                                                         <small>{{sa.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'PDFs' and level == 'starter' %}
-                                                                                    {% for sp in dashboard.field.guide.pdf.starter.all %}
+
+                                                                                    {% elif item == 'PDFs' and level == 'basic level' %}
+                                                                                    {% for sp in dashboard.field.guide.pdf.basic.all %}
                                                                                     <a href="{{sp.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
                                                                                             <h5 class="mb-1"></h5>
@@ -64,8 +66,9 @@
                                                                                         <small>{{sp.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Online Classes' and level == 'starter' %}
-                                                                                    {% for soc in dashboard.field.guide.klass.starter.all %}
+
+                                                                                    {% elif item == 'Online Classes' and level == 'basic level' %}
+                                                                                    {% for soc in dashboard.field.guide.klass.basic.all %}
                                                                                     <a href="{{soc.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
                                                                                             <h5 class="mb-1"></h5>
@@ -75,8 +78,9 @@
                                                                                         <small>{{soc.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Videos' and level == 'starter' %}
-                                                                                    {% for sv in dashboard.field.guide.video.starter.all %}
+
+                                                                                    {% elif item == 'Videos' and level == 'basic level' %}
+                                                                                    {% for sv in dashboard.field.guide.video.basic.all %}
                                                                                     <a href="{{sv.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
                                                                                             <h5 class="mb-1"></h5>
@@ -86,8 +90,9 @@
                                                                                         <small>{{sv.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Questions' and level == 'starter' %}
-                                                                                    {% for sq in dashboard.field.guide.question.starter.all %}
+
+                                                                                    {% elif item == 'Questions' and level == 'basic level' %}
+                                                                                    {% for sq in dashboard.field.guide.question.basic.all %}
                                                                                     <a href="{{sq.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
                                                                                             <h5 class="mb-1"></h5>
@@ -97,62 +102,8 @@
                                                                                         <small>{{sq.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Articles' and level == 'intermediate' %}
-                                                                                    {% for ia in dashboard.field.guide.article.intermediate.all %}
-                                                                                    <a href="{{ia.link}}" target="_blank" class="list-group-item list-group-item-action">
-                                                                                        <div class="d-flex w-100 justify-content-between">
-                                                                                            <h5 class="mb-1"></h5>
-                                                                                            <small class="text-muted">{{dashboard.updated_at|timesince}} ago</small>
-                                                                                        </div>
-                                                                                        <p class="mb-1">{{ia.title|title}}</p>
-                                                                                        <small class="text-muted">{{ia.description|lower}}</small>
-                                                                                    </a>
-                                                                                    {% endfor %}
-                                                                                    {% elif item == 'PDFs' and level == 'intermediate' %}
-                                                                                    {% for ip in dashboard.field.guide.pdf.intermediate.all %}
-                                                                                    <a href="{{ip.link}}" target="_blank" class="list-group-item list-group-item-action">
-                                                                                        <div class="d-flex w-100 justify-content-between">
-                                                                                            <h5 class="mb-1"></h5>
-                                                                                            <small class="text-muted">{{dashboard.updated_at|timesince}} ago</small>
-                                                                                        </div>
-                                                                                        <p class="mb-1">{{ip.title|title}}</p>
-                                                                                        <small class="text-muted">{{ip.description|lower}}</small>
-                                                                                    </a>
-                                                                                    {% endfor %}
-                                                                                    {% elif item == 'Online Classes' and level == 'intermediate' %}
-                                                                                    {% for ioc in dashboard.field.guide.klass.intermediate.all %}
-                                                                                    <a href="{{ioc.link}}" target="_blank" class="list-group-item list-group-item-action">
-                                                                                        <div class="d-flex w-100 justify-content-between">
-                                                                                            <h5 class="mb-1"></h5>
-                                                                                            <small class="text-muted">{{dashboard.updated_at|timesince}} ago</small>
-                                                                                        </div>
-                                                                                        <p class="mb-1">{{ioc.title|title}}</p>
-                                                                                        <small class="text-muted">{{ioc.description|lower}}</small>
-                                                                                    </a>
-                                                                                    {% endfor %}
-                                                                                    {% elif item == 'Videos' and level == 'intermediate' %}
-                                                                                    {% for iv in dashboard.field.guide.video.intermediate.all %}
-                                                                                    <a href="{{iv.link}}" target="_blank" class="list-group-item list-group-item-action">
-                                                                                        <div class="d-flex w-100 justify-content-between">
-                                                                                            <h5 class="mb-1"></h5>
-                                                                                            <small class="text-muted">{{dashboard.updated_at|timesince}} ago</small>
-                                                                                        </div>
-                                                                                        <p class="mb-1">{{iv.title|title}}</p>
-                                                                                        <small class="text-muted">{{iv.description|lower}}</small>
-                                                                                    </a>
-                                                                                    {% endfor %}
-                                                                                    {% elif item == 'Questions' and level == 'intermediate' %}
-                                                                                    {% for iq in dashboard.field.guide.question.intermediate.all %}
-                                                                                    <a href="{{iq.link}}" target="_blank" class="list-group-item list-group-item-action">
-                                                                                        <div class="d-flex w-100 justify-content-between">
-                                                                                            <h5 class="mb-1"></h5>
-                                                                                            <small class="text-muted">{{dashboard.updated_at|timesince}} ago</small>
-                                                                                        </div>
-                                                                                        <p class="mb-1">{{iq.title|title}}</p>
-                                                                                        <small class="text-muted">{{iq.description|lower}}</small>
-                                                                                    </a>
-                                                                                    {% endfor %}
-                                                                                    {% elif item == 'Articles' and level == 'advanced' %}
+
+                                                                                    {% elif item == 'Articles' and level == 'advanced level' %}
                                                                                     {% for aa in dashboard.field.guide.article.advanced.all %}
                                                                                     <a href="{{aa.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
@@ -163,7 +114,8 @@
                                                                                         <small class="text-muted">{{aa.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'PDFs' and level == 'advanced' %}
+
+                                                                                    {% elif item == 'PDFs' and level == 'advanced level' %}
                                                                                     {% for ap in dashboard.field.guide.pdf.advanced.all %}
                                                                                     <a href="{{ap.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
@@ -174,7 +126,8 @@
                                                                                         <small class="text-muted">{{ap.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Online Classes' and level == 'advanced' %}
+
+                                                                                    {% elif item == 'Online Classes' and level == 'advanced level' %}
                                                                                     {% for aoc in dashboard.field.guide.klass.advanced.all %}
                                                                                     <a href="{{aoc.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
@@ -185,7 +138,8 @@
                                                                                         <small class="text-muted">{{aoc.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Videos' and level == 'advanced' %}
+
+                                                                                    {% elif item == 'Videos' and level == 'advanced level' %}
                                                                                     {% for av in dashboard.field.guide.video.advanced.all %}
                                                                                     <a href="{{av.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
@@ -196,7 +150,8 @@
                                                                                         <small class="text-muted">{{av.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
-                                                                                    {% elif item == 'Questions' and level == 'advanced' %}
+
+                                                                                    {% elif item == 'Questions' and level == 'advanced level' %}
                                                                                     {% for aq in dashboard.field.guide.question.advanced.all %}
                                                                                     <a href="{{aq.link}}" target="_blank" class="list-group-item list-group-item-action">
                                                                                         <div class="d-flex w-100 justify-content-between">
@@ -207,6 +162,7 @@
                                                                                         <small class="text-muted">{{aq.description|lower}}</small>
                                                                                     </a>
                                                                                     {% endfor %}
+
                                                                                     {% endif %}
                                                                                 </div><!-- End List group Advanced Content -->
                                                                             </div>

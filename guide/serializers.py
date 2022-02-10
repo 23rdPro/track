@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from guide.models import (
-    StarterGuide,
-    IntermediateGuide,
+    BasicGuide,
     AdvancedGuide,
     Guide,
     Article)
@@ -11,18 +10,12 @@ from guide.models import (
 # todo write view > route to use link
 class StarterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StarterGuide
+        model = BasicGuide
         fields = [
             'title',
             'description',
             'link'
         ]
-
-
-class IntermediateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = IntermediateGuide
-        fields = ['title', 'description', 'link']
 
 
 class AdvancedSerializer(serializers.ModelSerializer):
@@ -33,7 +26,6 @@ class AdvancedSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     starter = StarterSerializer(many=True)
-    intermediate = IntermediateSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
@@ -43,7 +35,6 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 class PDFSerializer(serializers.ModelSerializer):
     starter = StarterSerializer(many=True)
-    intermediate = IntermediateSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
@@ -53,7 +44,6 @@ class PDFSerializer(serializers.ModelSerializer):
 
 class KlassSerializer(serializers.ModelSerializer):
     starter = StarterSerializer(many=True)
-    intermediate = IntermediateSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
@@ -63,7 +53,6 @@ class KlassSerializer(serializers.ModelSerializer):
 
 class VideoSerializer(serializers.ModelSerializer):
     starter = StarterSerializer(many=True)
-    intermediate = IntermediateSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
@@ -73,7 +62,6 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     starter = StarterSerializer(many=True)
-    intermediate = IntermediateSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:

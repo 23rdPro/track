@@ -2,7 +2,7 @@ import os
 
 
 def get_text(field: str, aoc: str):
-    qualifiers = ['beginner ', '', 'advanced ']
+    qualifiers = ['', 'advanced ']
     text = field+' '+aoc
     for q in qualifiers:
         term = q+text
