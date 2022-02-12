@@ -4,7 +4,8 @@ from guide.models import (
     Guide,
     BasicGuide,
     AdvancedGuide,
-    Article, PDF, Klass, Video, Question)
+    Article, PDF, Klass, Video, Question
+)
 
 admin.site.register(Guide)
 admin.site.register(BasicGuide)

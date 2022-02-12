@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from field.models import Field
-from guide.serializers import GuideSerializer
+from guide.api.serializers import GuideSerializer
 
 
 class FieldSerializer(serializers.HyperlinkedModelSerializer):

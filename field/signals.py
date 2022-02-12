@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
-
-from celery import chain
+from celery import group
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models.signals import post_save
@@ -46,22 +44,22 @@ def create_field_guide(sender, instance, created, **kwargs):
             instance.save()
 
             user = request.user
-            dd = Dashboard.objects.create(user=user, field=instance)
+            Dashboard.objects.create(user=user, field=instance)
 
-            # start tracking
-            job = chain(
-                tasks.basic_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk),
-                tasks.advanced_guide.si(article.pk, pdf.pk, klass.pk, video.pk, question.pk, instance.pk, dd.pk)
-            )
+            link_set = dict()
+            job = group([
+                tasks.create_article_objects.si(article.pk, instance.pk, link_set),
+                tasks.create_pdf_objects.si(pdf.pk, instance.pk, link_set),
+                tasks.create_klass_objects.si(klass.pk, instance.pk, link_set),
+                tasks.create_video_objects.si(video.pk, instance.pk, link_set),
+                tasks.create_question_objects.si(question.pk, instance.pk, link_set)
+            ])
             transaction.on_commit(lambda: job.apply_async(
                 expires=240,
                 retry=True,
-                retry_policy={
-                    'max_retries': None,
-                    'interval_start': 0,
-                    'interval_step': 0.2,
-                    'interval_max': 0.2
-                },
+                retry_policy={'max_retries': None, 'interval_start': 0, 'interval_step': 0.2,
+                              'interval_max': 0.2
+                              },
                 compression='gzip',
                 ignore_result=True
             ))

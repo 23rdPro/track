@@ -3,14 +3,14 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from dashboard import api as dashboard_views
-from field import views as field_views
-from users import views
+from dashboard.api import views as dashboard_views
+from field.api import views as field_views
+from users.api import views
 
-# router = routers.DefaultRouter()
-# router.register(r'users', views.UserViewSet)
-# router.register(r'fields', field_views.FieldRESTView)
-# router.register(r'dashboard', dashboard_views.DashboardRESTView, basename='dashboard')
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'fields', field_views.FieldRESTView)
+router.register(r'dashboard', dashboard_views.DashboardRESTView, basename='dashboard')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,8 +21,8 @@ urlpatterns = [
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
 
     # api routes
-    # path('api/', include(router.urls)),
-    # path('api-auth/', include(('rest_framework.urls', 'rest_framework'), namespace='api_auth')),
+    path('api/', include(router.urls)),
+    path('api-auth/', include(('rest_framework.urls', 'rest_framework'), namespace='api_auth')),
 
 ]
 

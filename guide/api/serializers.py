@@ -1,21 +1,12 @@
 from rest_framework import serializers
 
-from guide.models import (
-    BasicGuide,
-    AdvancedGuide,
-    Guide,
-    Article)
+from guide.models import BasicGuide, AdvancedGuide, Guide, Article
 
 
-# todo write view > route to use link
-class StarterSerializer(serializers.ModelSerializer):
+class BasicGuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasicGuide
-        fields = [
-            'title',
-            'description',
-            'link'
-        ]
+        fields = ['title', 'description', 'link']
 
 
 class AdvancedSerializer(serializers.ModelSerializer):
@@ -25,48 +16,48 @@ class AdvancedSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    starter = StarterSerializer(many=True)
+    basic = BasicGuideSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
         model = Article
-        fields = ['starter', 'intermediate', 'advanced']
+        fields = ['basic', 'advanced']
 
 
 class PDFSerializer(serializers.ModelSerializer):
-    starter = StarterSerializer(many=True)
+    basic = BasicGuideSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
         model = Article
-        fields = ['starter', 'intermediate', 'advanced']
+        fields = ['basic', 'advanced']
 
 
 class KlassSerializer(serializers.ModelSerializer):
-    starter = StarterSerializer(many=True)
+    basic = BasicGuideSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
         model = Article
-        fields = ['starter', 'intermediate', 'advanced']
+        fields = ['basic', 'advanced']
 
 
 class VideoSerializer(serializers.ModelSerializer):
-    starter = StarterSerializer(many=True)
+    basic = BasicGuideSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
         model = Article
-        fields = ['starter', 'intermediate', 'advanced']
+        fields = ['basic', 'advanced']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    starter = StarterSerializer(many=True)
+    basic = BasicGuideSerializer(many=True)
     advanced = AdvancedSerializer(many=True)
 
     class Meta:
         model = Article
-        fields = ['starter', 'intermediate', 'advanced']
+        fields = ['basic', 'advanced']
 
 
 class GuideSerializer(serializers.ModelSerializer):
@@ -78,10 +69,4 @@ class GuideSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Guide
-        fields = [
-            'article',
-            'pdf',
-            'klass',
-            'video',
-            'question'
-        ]
+        fields = ['article', 'pdf', 'klass', 'video', 'question']
