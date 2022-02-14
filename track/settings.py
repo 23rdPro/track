@@ -162,12 +162,12 @@ WSGI_APPLICATION = 'track.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", None),
-        "NAME": os.environ.get("SQL_DATABASE", None),
-        "USER": os.environ.get("SQL_USER", None),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", None),
-        "HOST": os.environ.get("SQL_HOST", None),
-        "PORT": os.environ.get("SQL_PORT", None),
+        "ENGINE": os.environ.get("SQL_ENGINE"),
+        "NAME": os.environ.get("SQL_DATABASE"),
+        "USER": os.environ.get("SQL_USER"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD"),
+        "HOST": os.environ.get("SQL_HOST"),
+        "PORT": os.environ.get("SQL_PORT"),
         "TEST": {
             "NAME": 'test-track'
         }
@@ -250,3 +250,58 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # SESSION_COOKIE_SECURE = os.environ.get(
 #     'SESSION_COOKIE_SECURE', False
 # )
+
+# SESSIONS_ENGINE = 'django.contrib.sessions.backends.cache'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+
+    }
+}
+
+
+# def get_cache():
+#     import logging
+#     logger = logging.getLogger(__name__)
+#
+#     try:
+#         servers = os.environ['MEMCACHIER_SERVERS']
+#         username = os.environ['MEMCACHIER_USERNAME']
+#         password = os.environ['MEMCAHIER_PASSWORD']
+#         return {
+#             'default': {
+#                 'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+#                 'TIMEOUT': None,
+#                 'LOCATION': servers,
+#                 'OPTIONS': {
+#                     'binary': True,
+#                     'username': username,
+#                     'password': password,
+#                     'behaviors': {
+#                         'no_block': True,
+#                         'tcp_nodelay': True,
+#                         'tcp_keeplive': True,
+#                         'connect_timeout': 2000,
+#                         'send_timeout': 750 * 1000,
+#                         'receive_timeout': 750 * 1000,
+#                         '_poll_timeout': 2000,
+#                         'ketama': True,
+#                         'remove_failed': 1,
+#                         'retry_timeout': 2,
+#                         'dead_timeout': 30,
+#                     }
+#                 }
+#             }
+#         }
+#     except Exception as e:
+#         logger.exception(e)
+#         return {
+#             'default' : {
+#                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+#             }
+#         }
+#
+#
+# CACHES = get_cache()

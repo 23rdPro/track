@@ -85,7 +85,6 @@ def create_article_objects(self, a_pk: int, f_pk: int, link_set: dict) -> None:
     article = Article.objects.get(pk=a_pk)
     b_objects = []
     for items in b_articles:
-        # link_set[items['link']] = link_set.get(items['link'], 0)+1
         if items['link'] not in link_set:
             o = BasicGuide.objects.create(
                 title=items['title'], link=items['link'], description=items['snippet']

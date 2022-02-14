@@ -18,3 +18,4 @@ class CreateFieldView(LoginRequiredMixin, CreateView):
             return 'field/create.html'
         return 'dashboard_alert.html'
 
+

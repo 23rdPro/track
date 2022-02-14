@@ -41,7 +41,7 @@
                                                                         id="collapse-{{level|lower|replace_word}}">
                                                                             <div class="accordion-body">
                                                                                 <!-- List group with Advanced Contents -->
-                                                                                <div class="list-group">
+                                                                                <div class="list-group" id="track">
 
                                                                                     {% if item == 'Articles' and level == 'basic level' %}
                                                                                     {% for sa in dashboard.field.guide.article.basic.all %}
@@ -185,4 +185,14 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    function reloadDiv() {
+        $( "#track" ).load(window.location.href + " #track" );
+    }
+    $(document).ready(function () {
+        setTimeout(reloadDiv, 4000);
+    });
+</script>
 {% endblock %}

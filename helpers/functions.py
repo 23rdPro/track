@@ -1,4 +1,14 @@
 import os
+import random
+import string
+
+
+def _hash(size=16, chars=string.ascii_letters + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def new_key():
+    return 'track.key' + _hash()
 
 
 def get_text(field: str, aoc: str):

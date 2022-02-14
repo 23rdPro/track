@@ -10,7 +10,7 @@ from field.models import Field
 from guide.models import Guide, Article, PDF, Klass, Video, Question
 
 
-@receiver(post_save, sender=Field)
+@receiver(post_save, sender=Field, dispatch_uid='new_field_guide')
 def create_field_guide(sender, instance, created, **kwargs):
     if created:
         import inspect
@@ -46,7 +46,7 @@ def create_field_guide(sender, instance, created, **kwargs):
             user = request.user
             Dashboard.objects.create(user=user, field=instance)
 
-            link_set = dict()
+            link_set = dict()  # todo: multiprocessing.Manager().dict()
             job = group([
                 tasks.create_article_objects.si(article.pk, instance.pk, link_set),
                 tasks.create_pdf_objects.si(pdf.pk, instance.pk, link_set),
