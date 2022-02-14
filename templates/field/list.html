@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Field Content</h5>
+                    <div class="list-group">
+                        {% for field in object_list %}
+                        <a href="{{field.get_absolute_url}}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"></h5>
+                                <small class="text-muted">{{field.dashboard_field.first.updated_at|timesince}} ago</small>
+                            </div>
+                            <p class="mb-1">{{field.field|upper}}</p>
+                            <small class="text-muted">{{field.aoc|title}}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -105,21 +105,25 @@
                     {% elif dashboards %}
                         Dashboard
                     {% else %}
-                        Welcome
+                        Edit Records
                     {% endif %}
                 </h1>
                 <nav style="--bs-breadcrumb-divider: '|';">
                     <ol class="breadcrumb">
-                        {% if publications or dashboards %}
-                            <li class="breadcrumb-item"><a href="/" class="breadcrumb-item active">Track</a></li>
-                        {% endif %}
+                        <li class="breadcrumb-item"><a href="/" class="breadcrumb-item active">Home</a></li>
                         {% if publications %}
                             <li class="breadcrumb-item">
                                 <a class="breadcrumb-item" href="{% url 'publication:publish' %}">+publish</a>
                             </li>
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-item" href="{% url 'publication:publish' %}">+edit publication</a>
+                            </li>
                         {% elif dashboards %}
                             <li class="breadcrumb-item">
                                 <a class="breadcrumb-item" href="{% url 'field:create' %}">+add field</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-item" href="{% url 'field:list' %}">+edit field</a>
                             </li>
                         {% endif %}
                     </ol>
