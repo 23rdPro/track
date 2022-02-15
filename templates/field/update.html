@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'account/base.html' %}
+{% load crispy_forms_tags  %}
 
-</body>
-</html>
+{% block edit_field %}
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Edit Field Record</h5>
+            <p class="text-center small">Enter detail for what you'd like to track below</p>
+        </div>
+
+        <form class="row g-3 needs-validation" method="post">
+            {% csrf_token %}
+            <div class="col-12">
+                {{form|crispy}}
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Track &raquo;</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Would you rather delete this record?
+                    <a href="{% url 'field:delete' field.id %}" data-bs-toggle="modal" data-bs-target="#basicModal">
+                        Click to delete
+                    </a>
+                </p>
+            </div>
+        </form>
+        <div class="modal fade" id="basicModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Field Record</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove this field from record?
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'field:delete' field.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-primary" value="Delete">Yes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

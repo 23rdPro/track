@@ -17,7 +17,7 @@ class CreateFieldView(LoginRequiredMixin, CreateView):
             created_at__date=timezone.now()).count()
         if qs_count <= 6:
             return 'field/create.html'
-        return 'dashboard_alert.html'
+        return 'request_exceeded.html'
 
 
 class ListFieldView(LoginRequiredMixin, ListView):
@@ -43,9 +43,11 @@ class UpdateFieldView(LoginRequiredMixin, UpdateView):
         num = Dashboard.objects.filter(created_at__date=timezone.now()).count()
         if num <= 60:
             return 'field/update.html'
-        return 'dashboard_alert.html'
+        return 'request_exceeded.html'
 
 
 class DeleteFieldView(LoginRequiredMixin, DeleteView):
     model = Field
     success_url = reverse_lazy('dashboard:list')
+    template_name = 'field/delete.html'
+    context_object_name = 'field'
