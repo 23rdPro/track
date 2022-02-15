@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    'django_celery_results',
+    # 'django_celery_results',
 
     'users',
     'dashboard.apps.DashboardConfig',
