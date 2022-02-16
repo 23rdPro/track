@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 
 from publication.forms import AddPublicationForm
 from publication.models import Publication
@@ -12,8 +12,8 @@ class PublicationListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        return Publication.objects.exclude(
-            title__isnull=True).exclude(description__isnull=True)
+        qs = Publication.objects.exclude(title__isnull=True).exclude(description__isnull=True)
+        return qs
 
     def get_template_names(self):
         if self.get_queryset():
@@ -43,3 +43,9 @@ class PublicationCreateView(LoginRequiredMixin, CreateView):
         obj.save()
         return super(PublicationCreateView, self).form_valid(form)
 
+
+class PublicationDeleteView(LoginRequiredMixin, DeleteView):
+    model = Publication
+    success_url = reverse_lazy('publication:list')
+    context_object_name = 'publication'
+    pk_url_kwarg = 'id'

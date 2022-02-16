@@ -13,11 +13,10 @@ class CreateFieldView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('dashboard:list')
 
     def get_template_names(self):
-        qs_count = Dashboard.objects.filter(
-            created_at__date=timezone.now()).count()
-        if qs_count <= 6:
-            return 'field/create.html'
-        return 'request_exceeded.html'
+        num = Dashboard.objects.filter(created_at__date=timezone.now()).count()
+        if num == 10:
+            return 'request_exceeded.html'
+        return 'field/create.html'
 
 
 class ListFieldView(LoginRequiredMixin, ListView):
@@ -41,9 +40,9 @@ class UpdateFieldView(LoginRequiredMixin, UpdateView):
 
     def get_template_names(self):
         num = Dashboard.objects.filter(created_at__date=timezone.now()).count()
-        if num <= 60:
-            return 'field/update.html'
-        return 'request_exceeded.html'
+        if num == 10:
+            return 'request_exceeded.html'
+        return 'field/update.html'
 
 
 class DeleteFieldView(LoginRequiredMixin, DeleteView):
