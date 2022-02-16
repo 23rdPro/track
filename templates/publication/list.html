@@ -24,7 +24,11 @@
                                 <td>{{publication.author.name|title}}</td>
                                 <td><a href="{{publication.get_absolute_url}}" target="_blank"><u>{{publication.title|title}}</u></a></td>
                                 <td>{{publication.description}}</td>
+                                {% if publication.author == user %}
                                 <td><a href="{% url 'publication:delete' publication.id %}" data-bs-toggle="modal" data-bs-target="#basicModal"><u>delete</u></a></td>
+                                {% else %}
+                                <td>NA</td>
+                                {% endif %}
 
                             </tr>
                             <div class="modal fade" id="basicModal" tabindex="-1">
@@ -35,7 +39,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            Are you sure you want to remove this field from record?
+                                            Are you sure you want to remove this publication from record?
                                         </div>
                                         <div class="modal-footer">
                                             <form action="{% url 'publication:delete' publication.id %}" method="post">
