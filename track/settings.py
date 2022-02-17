@@ -2,13 +2,11 @@ import environ
 import os
 from pathlib import Path
 
-
 env = environ.Env()
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -41,8 +39,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    # 'django_celery_results',
-
     'users',
     'dashboard.apps.DashboardConfig',
     'field.apps.FieldConfig',
@@ -60,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+        
 ]
 
 # Cross-Origin Resource Sharing (CORS)
@@ -72,7 +69,6 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000"
 ]
-
 
 ROOT_URLCONF = 'track.urls'
 
@@ -156,7 +152,6 @@ LOGIN_REDIRECT_URL = 'publication:list'
 
 WSGI_APPLICATION = 'track.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -173,7 +168,6 @@ DATABASES = {
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -193,7 +187,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -206,7 +199,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -231,7 +223,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL = 'redis://localhost:6379'
 # CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-# CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -252,56 +243,21 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # )
 
 # SESSIONS_ENGINE = 'django.contrib.sessions.backends.cache'
-
+# MemcachedCache
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': '127.0.0.1:11211',
+        'OPTIONS': {
+            'no_delay': True,
+            'ignore_exc': True,
+            'max_pool_size': 4,
+            'use_pooling': True
+        },
+        'TIMEOUT': None,
+        'KEY_PREFIX': os.environ.get('KEY_PREFIX'),
+        'VERSION': os.environ.get('VERSION'),
+        'KEY_FUNCTION': 'helpers.functions.make_key'
 
     }
 }
-
-
-# def get_cache():
-#     import logging
-#     logger = logging.getLogger(__name__)
-#
-#     try:
-#         servers = os.environ['MEMCACHIER_SERVERS']
-#         username = os.environ['MEMCACHIER_USERNAME']
-#         password = os.environ['MEMCAHIER_PASSWORD']
-#         return {
-#             'default': {
-#                 'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-#                 'TIMEOUT': None,
-#                 'LOCATION': servers,
-#                 'OPTIONS': {
-#                     'binary': True,
-#                     'username': username,
-#                     'password': password,
-#                     'behaviors': {
-#                         'no_block': True,
-#                         'tcp_nodelay': True,
-#                         'tcp_keeplive': True,
-#                         'connect_timeout': 2000,
-#                         'send_timeout': 750 * 1000,
-#                         'receive_timeout': 750 * 1000,
-#                         '_poll_timeout': 2000,
-#                         'ketama': True,
-#                         'remove_failed': 1,
-#                         'retry_timeout': 2,
-#                         'dead_timeout': 30,
-#                     }
-#                 }
-#             }
-#         }
-#     except Exception as e:
-#         logger.exception(e)
-#         return {
-#             'default' : {
-#                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-#             }
-#         }
-#
-#
-# CACHES = get_cache()

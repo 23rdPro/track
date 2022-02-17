@@ -6,22 +6,17 @@ class DashboardObjectQuerySet(models.QuerySet):
     def filter_by_field(self, query):
         lookup = (
             Q(field__field__icontains=query) |
-
             Q(field__aoc__icontains=query) |
-
             Q(field__guide__starter_title__icontains=query) |
-
             Q(field__guide__intermediate_title__icontains=query) |
-
             Q(field__guide__advanced_title__icontains=query)
         )
         return self.filter(lookup)
 
     def filter_by_publication(self, query):
         lookup = (
-            Q(publication__title__icontains=query) |
-
-            Q(publication__description__icontains=query)
+                Q(publication__title__icontains=query) |
+                Q(publication__description__icontains=query)
         )
         return self.filter(lookup)
 

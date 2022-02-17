@@ -20,6 +20,7 @@ django-allauth==0.45.0
 django-cors-headers==3.10.0
 django-crispy-forms==1.13.0
 django-environ==0.8.1
+django-lifecycle==0.9.6
 djangorestframework==3.12.4
 factory-boy==3.2.1
 Faker==9.8.0
@@ -53,6 +54,7 @@ pycodestyle==2.8.0
 pycparser==2.20
 pyflakes==2.4.0
 PyJWT==2.3.0
+pymemcache==3.5.0
 pyparsing==2.4.7
 pytest==6.2.5
 pytest-cov==3.0.0
@@ -73,6 +75,7 @@ tomli==1.2.2
 typing-extensions==3.10.0.2
 uritemplate==4.1.1
 urllib3==1.26.7
+urlman==2.0.1
 vine==5.0.0
 wcwidth==0.2.5
 zipp==3.6.0

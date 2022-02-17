@@ -7,7 +7,6 @@ from dashboard.models import Dashboard
 
 class DashboardListView(LoginRequiredMixin, ListView):
     paginate_by = 10
-    context_object_name = 'dashboards'
 
     def get_queryset(self):
         u = self.request.user
@@ -16,11 +15,9 @@ class DashboardListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardListView, self).get_context_data(**kwargs)
-        # dashboards = cache.get('dashboards')
-        # if dashboards is None:
-        #     dashboards = self.get_queryset()
-        #     cache.set('dashboards', dashboards)
-        # context['dashboards'] = dashboards
+        dashboards = cache.get_or_set('dashboards', self.get_queryset())
+        context['dashboards'] = dashboards
+
         context['guide_attributes'] = [
             'Articles', 'PDFs', 'Online Classes',
             'Videos', 'Questions'

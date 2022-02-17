@@ -11,7 +11,7 @@ class Dashboard(TimeStampMixin):
     objects = DashboardObjectManager()
 
     class Meta:
-        ordering = ['updated_at']
+        ordering = ['-updated_at']
 
     def get_absolute_url(self):
         return reverse('dashboard:detail', kwargs={'pk': self.pk})

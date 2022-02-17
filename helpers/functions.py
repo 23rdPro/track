@@ -1,3 +1,4 @@
+import hashlib
 import os
 import random
 import string
@@ -9,6 +10,13 @@ def _hash(size=16, chars=string.ascii_letters + string.digits):
 
 def new_key():
     return 'track.key' + _hash()
+
+
+def make_key(key, key_prefix, version):
+    joint = ':'.join([key_prefix, '%s' % version, key])
+    work = hashlib.blake2b(digest_size=20)
+    work.update(joint.encode())
+    return work.hexdigest()
 
 
 def get_text(field: str, aoc: str):

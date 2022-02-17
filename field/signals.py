@@ -1,4 +1,5 @@
 from celery import group
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models.signals import post_save, post_delete
@@ -40,15 +41,15 @@ def track_object(instance: Field, user: User) -> None:
         tasks.create_video_objects.si(video.pk, instance.pk, link_set),
         tasks.create_question_objects.si(question.pk, instance.pk, link_set)
     ])
-    transaction.on_commit(lambda: job.apply_async(
-        expires=240,
-        retry=True,
-        retry_policy={'max_retries': None, 'interval_start': 0, 'interval_step': 0.2,
-                      'interval_max': 0.2
-                      },
-        compression='gzip',
-        ignore_result=True
-    ))
+    # transaction.on_commit(lambda: job.apply_async(
+    #     expires=240,
+    #     retry=True,
+    #     retry_policy={'max_retries': None, 'interval_start': 0, 'interval_step': 0.2,
+    #                   'interval_max': 0.2
+    #                   },
+    #     compression='gzip',
+    #     ignore_result=True
+    # ))
     return
 
 
@@ -65,6 +66,7 @@ def create_field_handler(sender, instance, created, **kwargs):
     if created:
         track_object(instance, request.user)
     else:
+        cache.delete('dashboards')
         instance.guide.article.basic.all().delete()
         instance.guide.article.advanced.all().delete()
         instance.guide.pdf.basic.all().delete()
@@ -89,15 +91,15 @@ def create_field_handler(sender, instance, created, **kwargs):
             tasks.create_video_objects.si(v.pk, instance.pk, link_set),
             tasks.create_question_objects.si(q.pk, instance.pk, link_set)
         ])
-        transaction.on_commit(lambda: job.apply_async(
-            expires=240,
-            retry=True,
-            retry_policy={'max_retries': None, 'interval_start': 0, 'interval_step': 0.2,
-                          'interval_max': 0.2
-                          },
-            compression='gzip',
-            ignore_result=True
-        ))
+        # transaction.on_commit(lambda: job.apply_async(
+        #     expires=240,
+        #     retry=True,
+        #     retry_policy={'max_retries': None, 'interval_start': 0, 'interval_step': 0.2,
+        #                   'interval_max': 0.2
+        #                   },
+        #     compression='gzip',
+        #     ignore_result=True
+        # ))
 
 
 @receiver(post_delete, sender=Field, dispatch_uid='delete_field_guide')
