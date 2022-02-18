@@ -31,17 +31,11 @@
                 <i class="bi bi-list toggle-sidebar-btn"></i>
             </div>
             <div class="search-bar">
-                <form class="search-form d-flex align-items-center" method="POST" action="#">
-                    {% if user.is_authenticated %}
-                        {% if dashboards %}
-                            <input type="text" name="query" placeholder="Filter Dashboard" title="Enter search keyword">
-                        {% elif publications %}
-                            <input type="text" name="query" placeholder="Filter Publications" title="Enter search keyword">
-                        {% else %}
-                            <input type="text" name="query" placeholder="Filter" title="Enter search keyword">
-                        {% endif %}
+                <form class="search-form d-flex align-items-center" method="POST" action="">
+                    {% if not user.is_authenticated %}
+                        <input type="text" name="query" placeholder="Filter Publications" title="Enter search keyword">
                     {% else %}
-                        <input type="text" name="query" placeholder="Filter Publication" title="Enter search keyword">
+                        <input type="text" name="query" placeholder="Search..." title="Enter search keyword">
                     {% endif %}
                     <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                 </form>
@@ -114,9 +108,6 @@
                         {% if publications %}
                             <li class="breadcrumb-item">
                                 <a class="breadcrumb-item" href="{% url 'publication:publish' %}">+publish</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a class="breadcrumb-item" href="{% url 'publication:publish' %}">+edit publication</a>
                             </li>
                         {% elif dashboards %}
                             <li class="breadcrumb-item">

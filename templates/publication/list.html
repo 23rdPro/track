@@ -27,7 +27,9 @@
                                 {% if publication.author == user %}
                                 <td><a href="{% url 'publication:delete' publication.id %}" data-bs-toggle="modal" data-bs-target="#basicModal"><u>delete</u></a></td>
                                 {% else %}
+                                {% if user.is_authenticated %}
                                 <td>NA</td>
+                                {% endif %}
                                 {% endif %}
 
                             </tr>

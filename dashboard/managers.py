@@ -2,6 +2,10 @@ from django.db import models
 from django.db.models import Q
 
 
+class DashboardQuerySet(models.QuerySet):
+    pass
+
+
 class DashboardObjectQuerySet(models.QuerySet):
     def filter_by_field(self, query):
         lookup = (

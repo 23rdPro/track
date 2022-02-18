@@ -3,7 +3,6 @@ from rest_framework import viewsets
 
 from dashboard.api.serializers import DashboardSerializer
 from dashboard.models import Dashboard
-from helpers.functions import new_key
 
 
 class DashboardRESTView(viewsets.ModelViewSet):

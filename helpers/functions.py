@@ -1,18 +1,17 @@
 import hashlib
 import os
-import random
-import string
+
+from django.core.exceptions import ValidationError
 
 
-def _hash(size=16, chars=string.ascii_letters + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+def validate_file_handler(file):
+    extn = os.path.splitext(file.name)[1]
+    valid_extns = ['.pdf', ]
+    if not extn.lower() in valid_extns:
+        raise ValidationError('Unsupported File Extension.')
 
 
-def new_key():
-    return 'track.key' + _hash()
-
-
-def make_key(key, key_prefix, version):
+def make_key(key: str, key_prefix: str, version: int):
     joint = ':'.join([key_prefix, '%s' % version, key])
     work = hashlib.blake2b(digest_size=20)
     work.update(joint.encode())
@@ -38,7 +37,4 @@ def delete_file(path):
 
 
 def upload_to_path(instance, filename):
-    return "pdfs/user_{0}/{1}".format(
-        instance.author_id,
-        filename,
-    )
+    return "pdfs/user_{0}/{1}".format(instance.author_id, filename)

@@ -23,6 +23,9 @@
             <div class="col-12">
                 <label for="id_upload_pdf" class="form-label">Upload PDF:</label>
                 <input type="file" name="upload_pdf" class="form-control" id="id_upload_pdf">
+                {% for field in form.visible_fields %}
+                    <small class="form-text text-muted">{{field.help_text}}</small>
+                {% endfor %}
             </div>
             <div class="col-12">
                 <button class="btn btn-primary w-100" type="submit">{% trans "+Publish" %} &raquo;</button>
