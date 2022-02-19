@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Searched Items</h5>
+                    {% if queryset %}
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for publication in queryset %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{publication.author.name|title}}</td>
+                            <td><a href="{{publication.get_absolute_url}}" target="_blank"><u>{{publication.title|title}}</u></a></td>
+                            <td>{{publication.description}}</td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No matches. Refine your term and try again.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

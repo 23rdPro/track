@@ -19,6 +19,7 @@ urlpatterns = [
     path('field/', include(('field.urls', 'field'), namespace='field')),
     path('', include(('publication.urls', 'publication'), namespace='publication')),
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
+    path('search/', include(('search.urls', 'search'), namespace='search')),
 
     # api routes
     path('api/', include(router.urls)),
