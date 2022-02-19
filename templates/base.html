@@ -31,15 +31,19 @@
                 <i class="bi bi-list toggle-sidebar-btn"></i>
             </div>
             <div class="search-bar">
-                <form class="search-form d-flex align-items-center" method="POST" action="{% url 'search:publication' %}">
-                    {% csrf_token %}
-                    {% if not user.is_authenticated %}
+                {% if not user.is_authenticated %}
+                    <form action="{% url 'search:publication' %}" class="search-form d-flex align-items-center" method="POST">
+                        {% csrf_token %}
                         <input type="text" name="query" placeholder="Filter Publications" title="Enter search keyword">
-                    {% else %}
+                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'search_track' %}" class="search-form d-flex align-items-center" method="POST">
+                        {% csrf_token %}
                         <input type="text" name="query" placeholder="Search..." title="Enter search keyword">
-                    {% endif %}
-                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                </form>
+                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                    </form>
+                {% endif %}
             </div>
             <nav class="header-nav ms-auto">
                 <ul class="d-flex align-items-center">

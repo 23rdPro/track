@@ -5,6 +5,7 @@ from rest_framework import routers
 
 from dashboard.api import views as dashboard_views
 from field.api import views as field_views
+from search.views import SearchView
 from users.api import views
 
 router = routers.DefaultRouter()
@@ -20,6 +21,7 @@ urlpatterns = [
     path('', include(('publication.urls', 'publication'), namespace='publication')),
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
     path('search/', include(('search.urls', 'search'), namespace='search')),
+    path('result/', SearchView.as_view(), name='search_track'),
 
     # api routes
     path('api/', include(router.urls)),
