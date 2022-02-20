@@ -12,10 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', None)
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', None)
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]", "localhost:3000"]
 
@@ -223,7 +223,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CELERY
 CELERY_BROKER_URL = 'redis://localhost:6379'
-# CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -244,8 +243,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #     'SESSION_COOKIE_SECURE', False
 # )
 
-# SESSIONS_ENGINE = 'django.contrib.sessions.backends.cache'
-# MemcachedCache
+SESSIONS_ENGINE = 'django.contrib.sessions.backends.cache'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',

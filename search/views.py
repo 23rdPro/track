@@ -1,25 +1,33 @@
 import fitz
+from celery import group, shared_task
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from field.tasks import BaseRetryTask
 from guide.models import AdvancedGuide, BasicGuide
 from publication.models import Publication
 
 
-def search_pdf(query):
-    publications = []
-    for pub in Publication.objects.all():
-        doc = fitz.open(pub.upload_pdf.path)
-        for page in doc:
-            text = page.get_text().lower()
-            if query.lower() in text:
-                publications.append(pub.id)
-                break
+def search_pdf(query: str) -> list:
+    job = group(_search.si(p.id, query) for p in Publication.objects.all())
+    return job.apply_async().get()
+
+
+@shared_task(base=BaseRetryTask)
+def _search(hi_d: str, query: str) -> str or None:
+    publication = Publication.objects.get(id=hi_d)
+    doc = fitz.open(publication.upload_pdf.path)
+    for page in doc:
+        text = page.get_text().lower()
+        if query.lower() in text:
+            doc.close()
+            return publication.id
+    else:
         doc.close()
-    return publications
+        return None
 
 
 class PublicationSearchView(TemplateView):
@@ -28,13 +36,15 @@ class PublicationSearchView(TemplateView):
     def post(self, request, **kwargs):
         query = request.POST.get('query')
         if query:
-            pdfs = Publication.objects.filter(id__in=search_pdf(query))
+            id_s = [k for k in search_pdf(query) if k]
+            pdfs = Publication.objects.filter(id__in=id_s)
             qs = Publication.objects.annotate(
                 search=SearchVector('title', 'description')).filter(search=query)
             context = {'queryset': qs | pdfs}
             return render(request, self.template_name, context)
         else:
-            return HttpResponse("You didn't provide search key, please do that then hit return")
+            return HttpResponse(
+                "You didn't provide search key, please do that then hit return")
 
 
 class SearchView(LoginRequiredMixin, TemplateView):
@@ -43,8 +53,9 @@ class SearchView(LoginRequiredMixin, TemplateView):
     def post(self, request, **kwargs):
         query = request.POST.get('query')
         if query:
+            id_s = [k for k in search_pdf(query) if k]
             u = request.user
-            pdfs = Publication.objects.filter(id__in=search_pdf(query))
+            pdfs = Publication.objects.filter(id__in=id_s)
             pubs = Publication.objects.annotate(
                 search=SearchVector('title', 'description')).filter(search=query)
 
@@ -88,48 +99,10 @@ class SearchView(LoginRequiredMixin, TemplateView):
             basic_guides = b_articles | b_classes | b_pdfs | b_questions | b_videos
             context = {'publications': publications, 'advanced_guides': advanced_guides,
                        'basic_guides': basic_guides}
+            if any([publications, advanced_guides, basic_guides]):
+                context['items'] = True
+            print(context)
             return render(request, self.template_name, context)
         else:
-            return HttpResponse("You didn't provide search key, please do that then hit return")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            return HttpResponse(
+                "You didn't provide search key, please do that then hit return")
