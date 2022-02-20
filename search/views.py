@@ -101,7 +101,6 @@ class SearchView(LoginRequiredMixin, TemplateView):
                        'basic_guides': basic_guides}
             if any([publications, advanced_guides, basic_guides]):
                 context['items'] = True
-            print(context)
             return render(request, self.template_name, context)
         else:
             return HttpResponse(
