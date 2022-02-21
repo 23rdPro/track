@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from abc import ABC
 
 import celery
@@ -9,11 +10,10 @@ from googleapiclient.discovery import build
 from field.models import Field
 from guide.models import BasicGuide, AdvancedGuide, Article, PDF, Klass, Video, Question
 from helpers.functions import get_text
-from track.settings import env
 
 
-cx_key = env('CX_KEY')
-cse_key = env('CSE_KEY')
+cx_key = os.environ.get('CX_KEY')
+cse_key = os.environ.get('CSE_KEY')
 logger = logging.getLogger(__name__)
 
 

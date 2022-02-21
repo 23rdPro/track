@@ -16,7 +16,7 @@ services:
     ports:
     - "8000:8000"
     env_file:
-      - ./track/.env
+      - settings/.env
     depends_on:
       - db
       - redis
@@ -29,7 +29,7 @@ services:
     volumes:
     - trackdb:/var/lib/postgresql/data/
     env_file:
-      - ./track/.env
+      - settings/.env
 
   redis:
     image: redis:6.0-alpine
@@ -51,7 +51,7 @@ services:
       - db
       - django
     env_file:
-      - ./track/.env
+      - settings/.env
 
   celery-beat:
     build: .
@@ -64,7 +64,7 @@ services:
       - db
       - django
     env_file:
-      - ./track/.env
+      - settings/.env
 
 volumes:
   trackdb:

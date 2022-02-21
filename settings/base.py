@@ -5,19 +5,7 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
-
-ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]", "localhost:3000"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,8 +17,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
-
-    'debug_toolbar',
 
     'corsheaders',
     'rest_framework',
@@ -55,7 +41,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,23 +49,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
         
 ]
-
-INTERNAL_IPS = ("127.0.0.1", )
-
-EXTRA_SIGNALS = [
-    'dashboard.signals.dashboard_delete_handler',
-    'dashboard.signals.dashboard_create_handler',
-    'field.signals.create_field_handler',
-    'field.signals.delete_field_handler',
-
-]
-
-DEBUG_TOOLBAR_CONFIG = {
-    'ENABLE_STACKTRACES': False,
-    'ENABLE_STACKTRACES_LOCALS': False,
-    'PRETTIFY_SQL':  False,
-    'SHOW_TEMPLATE_CONTEXT': False,
-}
 
 # Cross-Origin Resource Sharing (CORS)
 CORS_ALLOWED_ORIGINS = [
@@ -128,7 +96,6 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 5,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ]
 }
@@ -154,13 +121,9 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # TODO check PasswordChangeView
 ACCOUNT_ADAPTER = 'users.adapter.UserAccountAdapter'
 
-# email settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 LOGIN_REDIRECT_URL = 'publication:list'
-
-# LOGIN_URL = 'account_login'
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {
@@ -175,8 +138,6 @@ LOGIN_REDIRECT_URL = 'publication:list'
 WSGI_APPLICATION = 'track.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE"),
@@ -192,8 +153,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -210,8 +169,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Africa/Lagos'
@@ -223,8 +180,6 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR / 'assets')
@@ -234,11 +189,10 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CELERY
@@ -248,12 +202,11 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
-# CELERY_ALWAYS_EAGER = True
-# CELERY_TASK_ACKS_LATE = True
+CELERY_ALWAYS_EAGER = True
+CELERY_TASK_ACKS_LATE = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 64
 # CELERY_CACHE_BACKEND = 'default'
 CELERY_TASK_TRACK_STARTED = True
-# CELERY_TASK_RESULT_EXPIRES
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
