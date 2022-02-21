@@ -27,6 +27,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include(('rest_framework.urls', 'rest_framework'), namespace='api_auth')),
 
+    # debug
+    path('__debug__/', include('debug_toolbar.urls')),
+
 ]
 
 if settings.DEBUG:

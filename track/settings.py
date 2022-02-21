@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = os.environ.get('DEBUG', True)
 
 ALLOWED_HOSTS = ["localhost", "testserver", "127.0.0.1", "[::1]", "localhost:3000"]
 
@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+
+    'debug_toolbar',
+
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,6 +64,23 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
         
 ]
+
+INTERNAL_IPS = ("127.0.0.1", )
+
+EXTRA_SIGNALS = [
+    'dashboard.signals.dashboard_delete_handler',
+    'dashboard.signals.dashboard_create_handler',
+    'field.signals.create_field_handler',
+    'field.signals.delete_field_handler',
+
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'ENABLE_STACKTRACES': False,
+    'ENABLE_STACKTRACES_LOCALS': False,
+    'PRETTIFY_SQL':  False,
+    'SHOW_TEMPLATE_CONTEXT': False,
+}
 
 # Cross-Origin Resource Sharing (CORS)
 CORS_ALLOWED_ORIGINS = [
@@ -80,7 +101,6 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR / 'templates'),
             os.path.join(BASE_DIR / 'auth_templates'),
-            os.path.join(BASE_DIR / 'build'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
