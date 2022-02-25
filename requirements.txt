@@ -15,12 +15,14 @@ click-repl==0.2.0
 coverage==6.1.1
 cryptography==35.0.0
 defusedxml==0.7.1
+dj-database-url==0.5.0
 Django==3.2
 django-allauth==0.45.0
 django-cors-headers==3.10.0
 django-crispy-forms==1.13.0
 django-debug-toolbar==3.2.4
 django-environ==0.8.1
+django-heroku==0.3.1
 django-lifecycle==0.9.6
 djangorestframework==3.12.4
 factory-boy==3.2.1
@@ -80,4 +82,5 @@ urllib3==1.26.7
 urlman==2.0.1
 vine==5.0.0
 wcwidth==0.2.5
+whitenoise==6.0.0
 zipp==3.6.0

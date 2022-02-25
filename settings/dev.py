@@ -4,11 +4,9 @@ SECRET_KEY = os.environ.get('DEV_SECRET_KEY')
 
 DEBUG = os.environ.get('DEV_DEBUG', True)
 
-ALLOWED_HOSTS = ["*", ]
+ALLOWED_HOSTS = ["localhost", '0.0.0.0']
 
 INSTALLED_APPS += ['debug_toolbar', ]
-
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 
 INTERNAL_IPS = ("127.0.0.1", )
 

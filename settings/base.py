@@ -1,6 +1,8 @@
+import django_heroku
 import environ
 import os
 from pathlib import Path
+
 
 env = environ.Env()
 environ.Env.read_env()
@@ -47,7 +49,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-        
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
 # Cross-Origin Resource Sharing (CORS)
@@ -235,3 +238,5 @@ CACHES = {
 
     }
 }
+
+django_heroku.settings(locals())
