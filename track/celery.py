@@ -4,7 +4,7 @@ from celery import Celery
 from django.conf import settings
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.prod')
 app = Celery('track', broker=settings.CELERY_BROKER_URL)
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
