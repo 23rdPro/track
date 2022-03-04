@@ -1,1 +1,1 @@
-web: bin/start-nginx bin/start-pgbouncer gunicorn -c gunicorn.conf.py track.wsgi:application --log-file -
+web: bin/start-nginx bin/start-pgbouncer gunicorn -c gunicorn.conf track.wsgi:application --log-file -
