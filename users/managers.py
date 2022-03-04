@@ -14,9 +14,9 @@ class UserManager(BaseUserManager):
         if not email and not username:
             raise ValueError(_('Email and Username are required'))
         elif BlackListedUsername.objects.filter(username=username).exists():
-            raise ValueError(_('Username is not valid'))
+            raise ValueError(_('Username is taken!'))
         elif not re.match(r'^[a-z0-9]*$', username):
-            raise ValueError(_('Username may only contain letters and numbers'))
+            raise ValueError(_('Username may only contain letters and numbers manager'))
         email = self.normalize_email(email)
         user_model = User
         username = user_model.normalize_username(username)

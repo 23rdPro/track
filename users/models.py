@@ -31,7 +31,7 @@ class User(TimeStampMixin, AbstractBaseUser, PermissionsMixin):
                                 validators=[
                                     RegexValidator(
                                         regex="^[a-z0-9]*$",
-                                        message="Username may only contain letters and numbers",
+                                        message="Username may only contain letters and numbers model",
                                         code="invalid_username"
                                     )
                                 ])
