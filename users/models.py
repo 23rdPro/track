@@ -28,13 +28,7 @@ class User(TimeStampMixin, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True, max_length=255)
     username = models.CharField(_('username'), unique=True, max_length=37,
                                 help_text='account unique moniker',
-                                validators=[
-                                    RegexValidator(
-                                        regex="^[a-z0-9]*$",
-                                        message="Username may only contain letters and numbers model",
-                                        code="invalid_username"
-                                    )
-                                ])
+                                )
     name = models.CharField(_('Full name'), max_length=128, help_text='full name')
     is_staff = models.BooleanField(_('staff status'), default=False)
     is_superuser = models.BooleanField(_('superuser status'), default=False)
