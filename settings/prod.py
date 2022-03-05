@@ -37,11 +37,4 @@ CSRF_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = 'DENY'
 
 
-# SERVER_EMAIL = '************@gmail.com'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = '**********@gmail.com'
-# EMAIL_HOST_PASSWORD = '**********'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_SUBJECT_PREFIX = '****'
-# DEFAULT_FROM_EMAIL = '*********@gmail.com'
+

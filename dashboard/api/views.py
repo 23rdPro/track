@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from rest_framework import viewsets
 
 from dashboard.api.serializers import DashboardSerializer
