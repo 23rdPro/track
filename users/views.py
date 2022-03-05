@@ -13,4 +13,4 @@ class UserUpdateAfterSignupView(LoginRequiredMixin, UpdateView):
     form_class = UserUpdateAfterSignupForm
     template_name = 'account/user_update_after_signup.html'
     context_object_name = 'user'
-    success_url = reverse_lazy('dashboard:list')
+    success_url = reverse_lazy('publication:list')
