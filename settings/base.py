@@ -125,8 +125,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # TODO check PasswordChangeView
 ACCOUNT_ADAPTER = 'users.adapter.UserAccountAdapter'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 LOGIN_REDIRECT_URL = 'publication:list'
 
 # SOCIALACCOUNT_PROVIDERS = {
@@ -216,8 +214,8 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CELERY
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = os.environ.get('REDIS_TLS_URL')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_TLS_URL')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -230,31 +228,58 @@ CELERY_TASK_TRACK_STARTED = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', False)
-#
-# SESSION_COOKIE_SECURE = os.environ.get(
-#     'SESSION_COOKIE_SECURE', False
-# )
-
 SESSIONS_ENGINE = 'django.contrib.sessions.backends.cache'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': '127.0.0.1:11211',
-        'OPTIONS': {
-            'no_delay': True,
-            'ignore_exc': True,
-            'max_pool_size': 4,
-            'use_pooling': True
-        },
-        'TIMEOUT': None,
-        'KEY_PREFIX': os.environ.get('KEY_PREFIX'),
-        'VERSION': os.environ.get('VERSION'),
-        'KEY_FUNCTION': 'helpers.functions.make_key'
+if not os.environ.get('MEMCACHIER_PASSWORD') and not os.environ.get('MEMCACHIER_SERVERS') \
+        and not os.environ.get('MEMCACHIER_USERNAME'):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+            'LOCATION': '127.0.0.1:11211',
+            'OPTIONS': {
+                'no_delay': True,
+                'ignore_exc': True,
+                'max_pool_size': 4,
+                'use_pooling': True
+            },
+            'TIMEOUT': None,
+            'KEY_PREFIX': os.environ.get('KEY_PREFIX'),
+            'VERSION': os.environ.get('VERSION'),
+            'KEY_FUNCTION': 'helpers.functions.make_key'
 
+        }
     }
-}
+
+else:
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+            'TIMEOUT': None,
+            'LOCATION': os.environ.get('MEMCACHIER_SERVERS'),
+            'OPTIONS': {
+                'binary': True,
+                'username': os.environ.get('MEMCACHIER_USERNAME'),
+                'password': os.environ.get('MEMCACHIER_PASSWORD'),
+                'behaviors': {
+                    'no_block': True,
+                    'tcp_nodelay': True,
+                    'tcp_keepalive': True,
+                    'connect_timeout': 2000,
+                    'send_timeout': 750 * 1000,
+                    'receive_timeout': 750 * 1000,
+                    '_poll_timeout': 2000,
+                    'ketama': True,
+                    'remove_failed': 1,
+                    'retry_timeout': 2,
+                    'dead_timeout': 30
+                }
+            },
+            'KEY_PREFIX': os.environ.get('KEY_PREFIX'),
+            'VERSION': os.environ.get('VERSION'),
+            'KEY_FUNCTION': 'helpers.functions.make_key'
+        }
+    }
 
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
