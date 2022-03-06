@@ -10,6 +10,8 @@ INSTALLED_APPS += ['debug_toolbar', ]
 
 INTERNAL_IPS = ("127.0.0.1", )
 
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
+
 EXTRA_SIGNALS = [
     'field.signals.create_field_handler',
     'field.signals.delete_field_handler',
