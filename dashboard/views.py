@@ -15,7 +15,7 @@ class DashboardListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardListView, self).get_context_data(**kwargs)
-        dashboards = cache.get_or_set('dashboards', self.get_queryset())
+        dashboards = cache.get_or_set('dashboards', self.get_queryset)
         context['dashboards'] = dashboards
 
         context['guide_attributes'] = [
