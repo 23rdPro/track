@@ -12,22 +12,22 @@ from publication.models import Publication
 
 
 def search_pdf(query: str) -> list:
-    job = group(_search.si(p.id, query) for p in Publication.objects.all())
-    return job.apply_async().get()
 
-
-@shared_task(base=BaseRetryTask)
-def _search(hi_d: str, query: str) -> str or None:
-    publication = Publication.objects.get(id=hi_d)
-    doc = fitz.open(publication.upload_pdf.path)
-    for page in doc:
-        text = page.get_text().lower()
-        if query.lower() in text:
+    @shared_task(base=BaseRetryTask)
+    def _search(hi_d: str, term: str) -> str or None:
+        p = Publication.objects.get(id=hi_d)
+        doc = fitz.open(p.upload_pdf.path)
+        for page in doc:
+            if term.lower() in page.get_text().lower():
+                doc.close()
+                return p.id
+        else:
             doc.close()
-            return publication.id
-    else:
-        doc.close()
-        return None
+        return
+
+    job = group(_search.si(p.id, query) for p in
+                Publication.objects.all())
+    return job.apply_async().get()
 
 
 class PublicationSearchView(TemplateView):
