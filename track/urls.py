@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
@@ -27,10 +29,13 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include(('rest_framework.urls', 'rest_framework'), namespace='api_auth')),
 
-    # debug
-    path('__debug__/', include('debug_toolbar.urls')),
-
 ]
+
+# todo if settings.DEBUG instead
+if not os.environ.get('MEMCACHIER_PASSWORD') and not os.environ.get('MEMCACHIER_SERVERS') \
+        and not os.environ.get('MEMCACHIER_USERNAME'):
+
+    urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
 
 if settings.DEBUG:
     from django.conf.urls.static import static
